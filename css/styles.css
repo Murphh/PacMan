@@ -84,8 +84,8 @@ body {
 .game-area{
   display: block;
   position: relative;
-  margin: 0 13.25%;
-  width: 73.5%;
+  margin: 0 10%;
+  width: 80%;
   border: solid 3px yellow;
   border-radius: 20px;
   overflow: hidden;
@@ -98,7 +98,7 @@ body {
 
 .pacman-icon {
   position: absolute;
-  width: 29.5px;
+  width: 30px;
   height: 30px;
   top: 15px;
   left: 15px;

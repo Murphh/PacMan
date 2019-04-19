@@ -1,4 +1,5 @@
-console.log("Loaded Page");
+var pacManLeft = 15;
+var pacManTop = 15;
 
 $(function(){
 
@@ -7,20 +8,35 @@ $(function(){
 
         switch (event.key) {
           case "ArrowUp":
-            console.log("Up Key Pressed");
+            movePac("vertical", "negative");
             break;
           case "ArrowDown":
-            console.log("Down Key Pressed");
+            movePac("vertical", "positive");
             break;
           case "ArrowRight":
-            console.log("Right Key Pressed");
+            movePac("horizontal", "positive");
             break;
           case "ArrowLeft":
-            console.log("Left Key Pressed");
+            movePac("horizontal", "negative");
             break;
           default:
             console.log(event.key);
         }
     });
-
 });
+
+function movePac(axis, direction){
+  if(direction == "positive" && axis == "horizontal"){
+    pacManLeft+=30;
+    $('#pacman').css('left', pacManLeft + 'px');
+  }else if (direction == "negative" && axis == "horizontal") {
+    pacManLeft-=30;
+    $('#pacman').css('left', pacManLeft + 'px');
+  }else if (direction == "positive" && axis == "vertical") {
+    pacManTop+=30;
+    $('#pacman').css('top', pacManTop + 'px');
+  }else if (direction == "negative" && axis == "vertical") {
+    pacManTop-=30;
+    $('#pacman').css('top', pacManTop + 'px');
+  }
+}
