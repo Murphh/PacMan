@@ -13,33 +13,35 @@ $(function(){
 
         switch (event.key) {
           case "ArrowUp":
-            movePac("vertical", "negative");
+            changeDir("vertical", "negative");
             break;
           case "ArrowDown":
-            movePac("vertical", "positive");
+            changeDir("vertical", "positive");
             break;
           case "ArrowRight":
-            movePac("horizontal", "positive");
+            changeDir("horizontal", "positive");
             break;
           case "ArrowLeft":
-            movePac("horizontal", "negative");
+            changeDir("horizontal", "negative");
             break;
           default:
-            changeDir();
+            console.log(event.key)
         }
     });
 
 });
 
-function changeDir(){
+function changeDir(axis, direction){
   if(!pacManMoving){
     intervalTimer = setInterval(function(){
+      movePac(axis, direction);
       console.log("50ms");
     }, 200);
     pacManMoving=true;
   }else{
     clearInterval(intervalTimer);
-    console.log("Stopped timer");
+    pacManMoving = false;
+    changeDir(axis, direction);
   }
 }
 
