@@ -31,14 +31,17 @@ $(function(){
 
 });
 
+//function for calling movePac on a timer until another direction key is pressed
 function changeDir(axis, direction){
+  //if Pac isnt already moving
   if(!pacManMoving){
     intervalTimer = setInterval(function(){
+      //move him every 1/nth of a second
       movePac(axis, direction);
-      console.log("50ms");
     }, 200);
     pacManMoving=true;
   }else{
+    //if he is moving then stop the timer, and call recursively to get him moving in the new direction
     clearInterval(intervalTimer);
     pacManMoving = false;
     changeDir(axis, direction);
@@ -46,18 +49,23 @@ function changeDir(axis, direction){
 }
 
 //Function for moving pacman in each of the four directions
+//He also rotates to face his direction
 function movePac(axis, direction){
   if(direction == "positive" && axis == "horizontal"){
     pacManLeft+=10;
     $('#pacman').css('left', pacManLeft + 'px');
+    $('#pacman').css('transform', 'rotate(0deg)');
   }else if (direction == "negative" && axis == "horizontal") {
     pacManLeft-=10;
     $('#pacman').css('left', pacManLeft + 'px');
+    $('#pacman').css('transform', 'rotate(180deg)');
   }else if (direction == "positive" && axis == "vertical") {
     pacManTop+=10;
     $('#pacman').css('top', pacManTop + 'px');
+    $('#pacman').css('transform', 'rotate(90deg)');
   }else if (direction == "negative" && axis == "vertical") {
     pacManTop-=10;
     $('#pacman').css('top', pacManTop + 'px');
+    $('#pacman').css('transform', 'rotate(270deg)');
   }
 }
