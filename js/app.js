@@ -69,18 +69,22 @@ $(function(){
   function movePac(axis, direction){
     if(direction == "positive" && axis == "horizontal"){
       pacManLeft+=10;
+      pacManRight+=10;
       $('#pacman').css('left', pacManLeft + 'px');
       $('#pacman').css('transform', 'rotate(0deg)');
     }else if (direction == "negative" && axis == "horizontal") {
       pacManLeft-=10;
+      pacManRight-=10;
       $('#pacman').css('left', pacManLeft + 'px');
       $('#pacman').css('transform', 'rotate(180deg)');
     }else if (direction == "positive" && axis == "vertical") {
       pacManTop+=10;
+      pacManBottom+=10;
       $('#pacman').css('top', pacManTop + 'px');
       $('#pacman').css('transform', 'rotate(90deg)');
     }else if (direction == "negative" && axis == "vertical") {
       pacManTop-=10;
+      pacManBottom-=10;
       $('#pacman').css('top', pacManTop + 'px');
       $('#pacman').css('transform', 'rotate(270deg)');
     }
@@ -91,4 +95,5 @@ $(function(){
     clearInterval(intervalTimer);
     pacManMoving = false;
   }
+
 });
