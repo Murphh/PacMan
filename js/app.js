@@ -22,20 +22,24 @@ $(function(){
 
   //array of the right hand walls on the top row.
   //Hard coded way to allow him to recognise walls
-
-  //230, 15, 85 - Values for first right hand wall
-  var topRowRight = [275, 560];
+  //[15, 85, 275]
+  var firstRightWall = [[15, 80, 275], [15, 170, 560], [50, 80, 50],
+   [50, 80, 155], [50, 80, 335], [50, 80, 460],
+    [120, 130, 50], [120, 240, 155], [120, 130, 215],
+  [135, 185, 275]];
 
   //var for setting the distance PacMan moves every interval
   var jumpDist = 5;
+  var pacManHeight = $('#pacman').height();
+  var pacManWidth = $('#pacman').width()
   var intervalTimer;
   var pacManMoving = false;
 
   //Pac Mans initial values for his position
   var pacManLeft = $('#pacman').position().left;
   var pacManTop = $('#pacman').position().top;
-  var pacManRight = pacManLeft + $('#pacman').width();
-  var pacManBottom = pacManTop + $('#pacman').height();
+  var pacManRight = pacManLeft + pacManWidth;
+  var pacManBottom = pacManTop + pacManHeight;
 
   //Event Listener that stop default action of spacebar being pressed
   $(document).keydown(function(event) {
@@ -62,10 +66,10 @@ $(function(){
         break;
       case "Enter":
         event.preventDefault();
-        //console.log("Left: " + pacManLeft);
+        console.log("Left: " + pacManLeft);
         console.log("Right: " + pacManRight);
-        //console.log("Top: " + pacManTop);
-        //console.log("Bottom: " + pacManBottom);
+        console.log("Top: " + pacManTop);
+        console.log("Bottom: " + pacManBottom);
         break;
       case " ":
         stopPac();
@@ -128,15 +132,31 @@ $(function(){
     pacManMoving = false;
   }
 
-  //checks that pacman can move in the given directions
-  //checks against an array of position values for right hand walls
   function checkRightClear(){
-    for (var i = 0; i < topRowRight.length; i++) {
-      if((pacManRight+jumpDist) > topRowRight[i] && (pacManRight+jumpDist) <= topRowRight[i] + jumpDist){
+    var xFlag, yFlag;
+
+    for(var i=0; i < firstRightWall.length; i++){
+      xFlag = true;
+      yFlag = true;
+
+      if(pacManTop >= (firstRightWall[i][0] - pacManHeight) && pacManTop <= firstRightWall[i][1]){
+        yFlag = false;
+      }
+
+      //if you are trying to move past the X coordinate of the wall, set the x flag to false
+      if((pacManRight+jumpDist) > firstRightWall[i][2] && (pacManRight+jumpDist) <= firstRightWall[i][2] + jumpDist){
+        xFlag = false;
+      }
+
+      //if both flags have been set then return that the move isnt clear
+      //if the square was clear, set both flags back to true;
+      if(xFlag == false && yFlag == false){
         return false;
       }
     }
+
     return true;
+
   }
 
 });
