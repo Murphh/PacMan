@@ -24,7 +24,7 @@ $(function(){
   //Hard coded way to allow him to recognise walls
 
   //230, 15, 85 - Values for first right hand wall
-  var topRowRight = [230, 465];
+  var topRowRight = [275, 560];
 
   //var for setting the distance PacMan moves every interval
   var jumpDist = 5;
@@ -36,6 +36,13 @@ $(function(){
   var pacManTop = $('#pacman').position().top;
   var pacManRight = pacManLeft + $('#pacman').width();
   var pacManBottom = pacManTop + $('#pacman').height();
+
+  //Event Listener that stop default action of spacebar being pressed
+  $(document).keydown(function(event) {
+    if(event.key == " "){
+      event.preventDefault();
+    }
+  })
 
   //Event Listener for keyboard presses
   $(document).keyup(function(event) {
@@ -54,10 +61,11 @@ $(function(){
         changeDir("horizontal", "negative");
         break;
       case "Enter":
-        console.log("Left: " + pacManLeft);
+        event.preventDefault();
+        //console.log("Left: " + pacManLeft);
         console.log("Right: " + pacManRight);
-        console.log("Top: " + pacManTop);
-        console.log("Bottom: " + pacManBottom);
+        //console.log("Top: " + pacManTop);
+        //console.log("Bottom: " + pacManBottom);
         break;
       case " ":
         stopPac();
