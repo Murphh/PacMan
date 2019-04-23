@@ -382,7 +382,7 @@ $(function(){
   decisionSquares[42] = {
     leftPosition: 125,
     topPosition: 405,
-    up: false,
+    up: true,
     right: true,
     down: true,
     left: false,
@@ -581,6 +581,7 @@ $(function(){
   //var for setting the distance PacMan moves every interval
   var previousDir;
   var jumpDist = 10;
+  var score = 0;
   var pacManHeight = $('#pacman').height();
   var pacManWidth = $('#pacman').width()
   var intervalTimer;
@@ -591,7 +592,6 @@ $(function(){
   var pacManTop = $('#pacman').position().top;
   var pacManRight = pacManLeft + pacManWidth;
   var pacManBottom = pacManTop + pacManHeight;
-
 
   //populate the screen with coins on page load
   addCoins();
@@ -637,6 +637,8 @@ $(function(){
     }
   });
 
+
+
   //function for calling movePac on a timer until another direction key is pressed
   function changeDir(direction){
     //if Pac isnt already moving
@@ -644,7 +646,7 @@ $(function(){
       intervalTimer = setInterval(function(){
         //move him every 1/nth of a second
         movePac(direction);
-      }, 400);
+      }, 100);
       pacManMoving=true;
     }else{
       //if he is moving then stop the timer, and call recursively to get him moving in the new direction
@@ -796,6 +798,7 @@ $(function(){
     $(document).find(".coin-icon").filter(function() {
       return this.style['left'] == pacLeft && this.style['top'] == pacTop;
     }).remove();
+    updateScore();
   }
 
   function checkForCoin(pacLeft, pacTop){
@@ -804,10 +807,12 @@ $(function(){
     });
     if(coins.length > 0){
       removeCoin(pacLeft + "px", pacTop + "px");
-    }else{
-      console.log("Coin gone!");
     }
-
   }
 
+  function updateScore(){
+    score+=10;
+    console.log(score);
+    $("#score").html(score);
+  }
 });
