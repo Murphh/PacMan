@@ -596,21 +596,30 @@ $(function(){
   //populate the screen with coins on page load
   addCoins();
 
-  var countdownTimer;
-  var countdown = 3;
-  countdownTimer = setInterval(function(){
-    $("#score").html(countdown);
-    if (countdown == 0) {
-      clearInterval(countdownTimer);
-      $("#score").html("GO!");
-      runGame();
-    }else{
+  $("#startGame").click(function(){
+    $(".current-score-display").append('<h1 id="score"></h1>');
+    $("#startGame").remove();
+    startCounter();
+  });
+
+  function startCounter(){
+    var countdownTimer;
+    var countdown = 3;
+    countdownTimer = setInterval(function(){
       $("#score").html(countdown);
-    }
-    countdown-=1;
-  }, 1000);
+      if (countdown == 0) {
+        clearInterval(countdownTimer);
+        runGame();
+      }else{
+        $("#score").html(countdown);
+      }
+      countdown-=1;
+    }, 1000);
+  }
 
   function runGame(){
+
+    $("#score").html("GO!");
     //Event Listener that stop default action of spacebar being pressed
     $(document).keydown(function(event) {
       if(event.key == " " || event.key == "ArrowUp" || event.key == "ArrowDown" || event.key == "ArrowRight" || event.key == "ArrowLeft"){
@@ -675,7 +684,7 @@ $(function(){
   function movePac(direction){
 
     if(pacManLeft == 565 && pacManTop == 245 && previousDir == "right"){
-      pacManLeft = 0;
+      pacManLeft = 5;
       pacManRight = pacManLeft += pacManWidth;
       $('#pacman').css('left', pacManLeft + 'px');
       $('#pacman').css('transform', 'rotate(0deg)');

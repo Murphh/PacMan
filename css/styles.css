@@ -30,7 +30,6 @@ body {
 }
 
 .current-game, .leaderboard-display {
-  flex-grow: 1;
   width: 50%;
   height: 100%;
 }
@@ -39,6 +38,10 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+}
+
+.current-game {
+  padding-top: 10px;
 }
 
 .leaderboard {
@@ -71,8 +74,7 @@ body {
 
 .current-score-display, .leaderboard-title {
   width: 80%;
-  min-height: 50px;
-  padding: 15px 0 0;
+  padding: 10px 0 10px;
   align-self: center;
   background-color: darkblue;
   border: solid 3px yellow;
@@ -81,6 +83,23 @@ body {
   text-align: center;
 }
 
+.current-score-display button {
+  height: 50px;
+  width: 200px;
+  background-color: dodgerblue;
+  border: solid 3px yellow;
+  color: yellow;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+.current-score-display h1 {
+  margin: 0;
+}
+.current-score-display button:hover {
+  background-color: darkblue;
+  cursor: pointer;
+}
 .game-area{
   display: block;
   position: relative;
