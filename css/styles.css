@@ -52,7 +52,7 @@ body {
   color: yellow;
   text-align: center;
   align-self: center;
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 
 .leaderboard-row {
@@ -63,6 +63,7 @@ body {
   justify-content: space-around;
   border: solid 3px yellow;
   border-radius: 10px;
+  margin-bottom: 20px;
 }
 
 .leaderboard p {
@@ -83,6 +84,11 @@ body {
   text-align: center;
 }
 
+.current-score-display{
+  display: flex;
+  justify-content: space-around;
+}
+
 .current-score-display button {
   height: 50px;
   width: 200px;
@@ -95,10 +101,18 @@ body {
 }
 .current-score-display h1 {
   margin: 0;
+  display: inline-block;
 }
 .current-score-display button:hover {
   background-color: darkblue;
   cursor: pointer;
+}
+.current-score-display input[type="text"]{
+  width: 55%;
+  border: solid 3px yellow;
+  border-radius: 5px;
+  padding-left: 5px;
+  font-size: 1em;
 }
 .game-area{
   display: block;

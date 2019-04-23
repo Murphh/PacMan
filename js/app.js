@@ -1,5 +1,7 @@
 $(function(){
-
+  /**********************************************************/
+  /*---------Hard Coded Data for decison squares -----------*/
+  /**********************************************************/
   var decisionSquares = [];
   decisionSquares[0] = {
     leftPosition: 15,
@@ -578,29 +580,49 @@ $(function(){
     connectedSquares: [59, 62]
   }
 
-  //var for setting the distance PacMan moves every interval
+  /************************************************/
+  /*----Initial Var Setup & Running of Game-------*/
+  /************************************************/
+
+  var leaderboardScores = [];
+  var score = 0;
   var previousDir;
   var jumpDist = 10;
-  var score = 0;
-  var pacManHeight = $('#pacman').height();
-  var pacManWidth = $('#pacman').width()
   var intervalTimer;
   var pacManMoving = false;
 
   //Pac Mans initial values for his position
-  var pacManLeft = $('#pacman').position().left;
-  var pacManTop = $('#pacman').position().top;
-  var pacManRight = pacManLeft + pacManWidth;
-  var pacManBottom = pacManTop + pacManHeight;
+  var pacManLeft, pacManTop, pacManRight, pacManBottom;
+  var pacManHeight = $('#pacman').height();
+  var pacManWidth = $('#pacman').width();
 
-  //populate the screen with coins on page load
-  addCoins();
+  //Starts the Game!
+  setupGame();
 
-  $("#startGame").click(function(){
-    $(".current-score-display").append('<h1 id="score"></h1>');
-    $("#startGame").remove();
-    startCounter();
-  });
+  /*********************************************/
+  /*----Funcs for starting/ending Game---------*/
+  /*********************************************/
+
+  function setupGame(){
+    $(".current-score-display").empty();
+    $(".current-score-display").append('<button type="button" id="startGame">Start Game!</button>');
+    score = 0;
+    $(".game-area").empty();
+    $(".game-area").append('<img class="background-img" src="img/level1-background.jpg" alt=""> <img src="img/pacman.png" class="pacman-icon"  id="pacman" alt="">');
+
+    pacManLeft = $('#pacman').position().left;
+    pacManTop = $('#pacman').position().top;
+    pacManRight = pacManLeft + pacManWidth;
+    pacManBottom = pacManTop + pacManHeight;
+
+    addCoins();
+
+    $("#startGame").click(function(){
+      $(".current-score-display").append('<h1 id="score"></h1>');
+      $("#startGame").remove();
+      startCounter();
+    });
+  }
 
   function startCounter(){
     var countdownTimer;
@@ -614,12 +636,36 @@ $(function(){
         $("#score").html(countdown);
       }
       countdown-=1;
-    }, 1000);
+    }, 500);
   }
+
+  function wonGame(){
+    stopPac();
+    $("#score").remove();
+    $(".current-score-display").append('<h1>You Won!</h1>');
+    $(".current-score-display").append('<button type="button" id="toLeaderboardButton">Add to Leaderboard</button>');
+
+    $("#toLeaderboardButton").click(function(){
+      $(".current-score-display h1").remove();
+      $("#toLeaderboardButton").remove();
+      $(".current-score-display").append('<input id="playerName" type="text" placeholder="Name">');
+      $(".current-score-display").append('<button type="button" id="addToBoard">Add to Leaderboard</button>');
+
+      $("#addToBoard").click(function(){
+        updateBoard();
+        setupGame();
+      });
+    });
+  }
+
+  /**********************************************/
+  /*--Func for setting event listeners on game--*/
+  /**********************************************/
 
   function runGame(){
 
     $("#score").html("GO!");
+
     //Event Listener that stop default action of spacebar being pressed
     $(document).keydown(function(event) {
       if(event.key == " " || event.key == "ArrowUp" || event.key == "ArrowDown" || event.key == "ArrowRight" || event.key == "ArrowLeft"){
@@ -653,14 +699,14 @@ $(function(){
         case " ":
           stopPac();
           break;
-        case "c":
-          removeCoin();
-          break;
         default:
-          console.log(event.key);
       }
     });
   }
+
+  /*******************************************************/
+  /*-------------Funcs for moving PacMan-----------------*/
+  /*******************************************************/
 
   //function for calling movePac on a timer until another direction key is pressed
   function changeDir(direction){
@@ -669,7 +715,7 @@ $(function(){
       intervalTimer = setInterval(function(){
         //move him every 1/nth of a second
         movePac(direction);
-      }, 100);
+      }, 150);
       pacManMoving=true;
     }else{
       //if he is moving then stop the timer, and call recursively to get him moving in the new direction
@@ -680,7 +726,6 @@ $(function(){
   }
 
   //Function for moving pacman in each of the four directions
-  //He also rotates to face his direction
   function movePac(direction){
 
     if(pacManLeft == 565 && pacManTop == 245 && previousDir == "right"){
@@ -728,7 +773,6 @@ $(function(){
         checkForCoin(pacManLeft+12.5, pacManTop+12.5);
       }
     }
-
   }
 
   //function for stopping pac moving
@@ -761,6 +805,10 @@ $(function(){
     return previousOpt;
   }
 
+  /**************************************************/
+  /*----------Funcs for manipulating coins----------*/
+  /**************************************************/
+
   //function for adding coins to the screen
   function addCoins(){
 
@@ -792,7 +840,6 @@ $(function(){
               $(".game-area").append('<img src="img/coin.png" class="coin-icon" style="left:' + i + 'px; top: ' + startTop + 'px">');
             }
           }
-
         }
         //if the current square is vertical from its connected square
         if (startSquare.leftPosition == decisionSquares[startSquare.connectedSquares[x]].leftPosition) {
@@ -833,8 +880,43 @@ $(function(){
     }
   }
 
+  /*************************************/
+  /*----Funcs for updating GUI---------*/
+  /*************************************/
+
   function updateScore(){
     score+=10;
     $("#score").html("Current score: " + score);
+    if(score==5680){
+      wonGame();
+    }
   }
+
+  function updateBoard(){
+    var name = $("#playerName").val();
+    var obj = {
+      name: name,
+      gameScore: score
+    }
+    leaderboardScores.push(obj);
+    $(".leaderboard").empty();
+    leaderboardScores.sort(function(obj1, obj2) {
+      return obj1.gameScore - obj2.gameScore;
+    });
+
+    for (var i = 0; i < leaderboardScores.length && i <=4;  i++) {
+      var rowId = "row" + i;
+      var currentName = "<p>" + leaderboardScores[i].name + "</p>"
+      var currentScore = "<p>" + leaderboardScores[i].gameScore + "</p>";
+      $(".leaderboard").prepend('<div class="leaderboard-row" id="' + rowId + '"></div>');
+      rowId = "#" + rowId;
+      $(rowId).append(currentName);
+      $(rowId).append(currentScore);
+    }
+  }
+
+  /**********************************************/
+  /*-----------Ghosts Funcs---------------------*/
+  /**********************************************/
+
 });
