@@ -585,6 +585,7 @@ $(function(){
   /************************************************/
 
   var leaderboardScores = [];
+  var ghosts = [];
   var score = 0;
   var previousDir;
   var jumpDist = 10;
@@ -609,6 +610,7 @@ $(function(){
     score = 0;
     $(".game-area").empty();
     $(".game-area").append('<img class="background-img" src="img/level1-background.jpg" alt=""> <img src="img/pacman.png" class="pacman-icon"  id="pacman" alt="">');
+    addGhosts();
 
     pacManLeft = $('#pacman').position().left;
     pacManTop = $('#pacman').position().top;
@@ -918,5 +920,25 @@ $(function(){
   /**********************************************/
   /*-----------Ghosts Funcs---------------------*/
   /**********************************************/
+
+  function addGhosts(){
+    for (var i = 0; i < 4; i++) {
+      var html = '<img src="img/ghost' + i + '.png" class="ghosts ghost' + i + '" alt="">';
+      $(".game-area").append(html);
+    }
+    setGhostPositions();
+  }
+
+  function setGhostPositions(){
+    for (var i = 0; i < 4; i++) {
+      var currentGhost = {};
+      currentGhost.left = $(".ghost" + i).position().left;
+      currentGhost.right = $(".ghost" + i).position().left + $(".ghost" + 1).width();
+      currentGhost.top = $(".ghost" + i).position().top;
+      currentGhost.bottom = $(".ghost" + i).position().top + $(".ghost" + 1).height();
+      ghosts.push(currentGhost)
+    }
+    console.log(ghosts);
+  }
 
 });

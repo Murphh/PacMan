@@ -138,6 +138,33 @@ body {
   z-index: 10;
 }
 
+.ghosts {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  z-index: 11;
+}
+
+.ghost0{
+  top: 15px;
+  left: 15px;
+}
+
+.ghost1{
+  top: 15px;
+  left: 525px;
+}
+
+.ghost2{
+  top: 505px;
+  left: 15px;
+}
+
+.ghost3{
+  top: 505px;
+  left: 525px;
+}
+
 .coin-icon {
   position: absolute;
   width: 10px;
