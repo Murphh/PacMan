@@ -586,11 +586,12 @@ $(function(){
 
   var leaderboardScores = [];
   var ghosts = [];
+  var pacMan = {};
   var score = 0;
-  var previousDir;
+  //var previousDir;
   var jumpDist = 10;
   var intervalTimer;
-  var pacManMoving = false;
+  //var pacManMoving = false;
 
   //Pac Mans initial values for his position
   var pacManLeft, pacManTop, pacManRight, pacManBottom;
@@ -608,14 +609,8 @@ $(function(){
     $(".current-score-display").empty();
     $(".current-score-display").append('<button type="button" id="startGame">Start Game!</button>');
     score = 0;
-    $(".game-area").empty();
-    $(".game-area").append('<img class="background-img" src="img/level1-background.jpg" alt=""> <img src="img/pacman.png" class="pacman-icon"  id="pacman" alt="">');
+    addPacMan();
     addGhosts();
-
-    pacManLeft = $('#pacman').position().left;
-    pacManTop = $('#pacman').position().top;
-    pacManRight = pacManLeft + pacManWidth;
-    pacManBottom = pacManTop + pacManHeight;
 
     addCoins();
 
@@ -624,6 +619,17 @@ $(function(){
       $("#startGame").remove();
       startCounter();
     });
+  }
+
+  function addPacMan(){
+    $(".game-area").empty();
+    $(".game-area").append('<img class="background-img" src="img/level1-background.jpg" alt=""> <img src="img/pacman.png" class="pacman-icon"  id="pacman" alt="">');
+    pacMan.left = $('#pacman').position().left;
+    pacMan.right = $('#pacman').position().left + $('#pacman').width();
+    pacMan.top = $('#pacman').position().top;
+    pacMan.bottom = $('#pacman').position().top + $('#pacman').height();
+    pacMan.id = "#pacman";
+    pacMan.moving = false;
   }
 
   function startCounter(){
@@ -642,7 +648,7 @@ $(function(){
   }
 
   function wonGame(){
-    stopPac();
+    stopObj(pacMan);
     $("#score").remove();
     $(".current-score-display").append('<h1>You Won!</h1>');
     $(".current-score-display").append('<button type="button" id="toLeaderboardButton">Add to Leaderboard</button>');
@@ -680,26 +686,30 @@ $(function(){
 
       switch (event.key) {
         case "ArrowUp":
-          changeDir("up");
+          changeDir(pacMan, "up");
           break;
         case "ArrowDown":
-          changeDir("down");
+          changeDir(pacMan, "down");
           break;
         case "ArrowRight":
-          changeDir("right");
+          changeDir(pacMan, "right");
           break;
         case "ArrowLeft":
-          changeDir("left");
+          changeDir(pacMan, "left");
           break;
         case "Enter":
           event.preventDefault();
-          console.log("Left: " + pacManLeft);
-          console.log("Right: " + pacManRight);
-          console.log("Top: " + pacManTop);
-          console.log("Bottom: " + pacManBottom);
+          console.log("Left: " + pacMan.left);
+          console.log("Right: " + pacMan.right);
+          console.log("Top: " + pacMan.top);
+          console.log("Bottom: " + pacMan.bottom);
+          break;
+        case "r":
+          event.preventDefault();
+          changeDir()
           break;
         case " ":
-          stopPac();
+          stopObj(pacMan);
           break;
         default:
       }
@@ -711,93 +721,91 @@ $(function(){
   /*******************************************************/
 
   //function for calling movePac on a timer until another direction key is pressed
-  function changeDir(direction){
+  function changeDir(objType, direction){
     //if Pac isnt already moving
-    if(!pacManMoving){
+    if(!objType.moving){
       intervalTimer = setInterval(function(){
         //move him every 1/nth of a second
-        movePac(direction);
+        moveObj(pacMan, direction);
       }, 150);
-      pacManMoving=true;
+      objType.moving=true;
     }else{
       //if he is moving then stop the timer, and call recursively to get him moving in the new direction
       clearInterval(intervalTimer);
-      pacManMoving = false;
-      changeDir(direction);
+      objType.moving = false;
+      changeDir(objType, direction);
     }
   }
 
   //Function for moving pacman in each of the four directions
-  function movePac(direction){
+  function moveObj(objType, direction){
 
-    if(pacManLeft == 565 && pacManTop == 245 && previousDir == "right"){
-      pacManLeft = 5;
-      pacManRight = pacManLeft += pacManWidth;
-      $('#pacman').css('left', pacManLeft + 'px');
-      $('#pacman').css('transform', 'rotate(0deg)');
-      previousDir = "right";
-    }else if (pacManLeft <= -20 && pacManTop == 245 && previousDir == "left") {
-      console.log("Moved here");
-      pacManLeft = 565;
-      pacManRight = pacManLeft += pacManWidth;
-      $('#pacman').css('left', pacManLeft + 'px');
-      $('#pacman').css('transform', 'rotate(0deg)');
-      previousDir = "left";
+    if(objType.left== 565 && objType.top == 245 && previousDir == "right"){
+      objType.left = 5;
+      objType.right = objType.left += 30;
+      $(objType.id).css('left', objType.left + 'px');
+      $(objType.id).css('transform', 'rotate(0deg)');
+      objType.previousDir = "right";
+    }else if (objType.left <= -20 && objType.top == 245 && previousDir == "left") {
+      objType.left = 565;
+      objType.right = objType.left += 30;
+      $(objType.id).css('left', objType.left + 'px');
+      $(objType.id).css('transform', 'rotate(0deg)');
+      objType.previousDir = "left";
     }else{
-      var squareOptions = checkOptions();
+      var squareOptions = checkOptions(objType);
       if(direction == "right" && squareOptions.right == true){
-        pacManLeft+=jumpDist;
-        pacManRight+=jumpDist;
-        $('#pacman').css('left', pacManLeft + 'px');
-        $('#pacman').css('transform', 'rotate(0deg)');
-        previousDir = "right";
-        checkForCoin(pacManLeft+12.5, pacManTop+12.5);
+        objType.left+=jumpDist;
+        objType.right+=jumpDist;
+        $(objType.id).css('left', objType.left + 'px');
+        $(objType.id).css('transform', 'rotate(0deg)');
+        objType.previousDir = "right";
+        checkForCoin(objType.left+12.5, objType.top+12.5);
       }else if (direction == "left" && squareOptions.left == true){
-        pacManLeft-=jumpDist;
-        pacManRight-=jumpDist;
-        $('#pacman').css('left', pacManLeft + 'px');
-        $('#pacman').css('transform', 'rotate(180deg)');
-        previousDir = "left";
-        checkForCoin(pacManLeft+12.5, pacManTop+12.5);
+        objType.left-=jumpDist;
+        objType.right-=jumpDist;
+        $(objType.id).css('left', objType.left + 'px');
+        $(objType.id).css('transform', 'rotate(180deg)');
+        objType.previousDir = "left";
+        checkForCoin(objType.left+12.5, objType.top+12.5);
       }else if (direction == "down" && squareOptions.down == true){
-        pacManTop+=jumpDist;
-        pacManBottom+=jumpDist;
-        $('#pacman').css('top', pacManTop + 'px');
-        $('#pacman').css('transform', 'rotate(90deg)');
-        previousDir = "down";
-        checkForCoin(pacManLeft+12.5, pacManTop+12.5);
+        objType.top+=jumpDist;
+        objType.bottom+=jumpDist;
+        $(objType.id).css('top', objType.top + 'px');
+        $(objType.id).css('transform', 'rotate(90deg)');
+        objType.previousDir = "down";
+        checkForCoin(objType.left+12.5, objType.top+12.5);
       }else if (direction == "up" && squareOptions.up == true){
-        pacManTop-=jumpDist;
-        pacManBottom-=jumpDist;
-        $('#pacman').css('top', pacManTop + 'px');
-        $('#pacman').css('transform', 'rotate(270deg)');
-        previousDir = "up";
-        checkForCoin(pacManLeft+12.5, pacManTop+12.5);
+        objType.top-=jumpDist;
+        objType.bottom-=jumpDist;
+        $(objType.id).css('top', objType.top + 'px');
+        $(objType.id).css('transform', 'rotate(270deg)');
+        objType.previousDir = "up";
+        checkForCoin(objType.left+12.5, objType.top+12.5);
       }
     }
   }
-
   //function for stopping pac moving
-  function stopPac(){
+  function stopObj(objType){
     clearInterval(intervalTimer);
-    pacManMoving = false;
+    objType.moving = false;
   }
 
-  function checkOptions(){
+  function checkOptions(objType){
     var previousOpt = {};
 
     for (var i = 0; i < decisionSquares.length; i++) {
-      if (decisionSquares[i].leftPosition == pacManLeft && decisionSquares[i].topPosition == pacManTop) {
+      if (decisionSquares[i].leftPosition == objType.left && decisionSquares[i].topPosition == objType.top) {
         return decisionSquares[i];
       }
     }
 
-    if(previousDir == "right" || previousDir == "left"){
+    if(objType.previousDir == "right" || objType.previousDir == "left"){
       previousOpt.up = false;
       previousOpt.down = false;
       previousOpt.left = true;
       previousOpt.right = true;
-    }else if (previousDir == "up" || previousDir == "down") {
+    }else if (objType.previousDir == "up" || objType.previousDir == "down") {
       previousOpt.up = true;
       previousOpt.down = true;
       previousOpt.left = false;
@@ -936,9 +944,9 @@ $(function(){
       currentGhost.right = $(".ghost" + i).position().left + $(".ghost" + 1).width();
       currentGhost.top = $(".ghost" + i).position().top;
       currentGhost.bottom = $(".ghost" + i).position().top + $(".ghost" + 1).height();
+      currentGhost.moving = false;
       ghosts.push(currentGhost)
     }
-    console.log(ghosts);
   }
 
 });
