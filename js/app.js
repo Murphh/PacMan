@@ -629,6 +629,9 @@ $(function(){
       case " ":
         stopPac();
         break;
+      case "c":
+        removeCoin();
+        break;
       default:
         console.log(event.key);
     }
@@ -676,24 +679,28 @@ $(function(){
         $('#pacman').css('left', pacManLeft + 'px');
         $('#pacman').css('transform', 'rotate(0deg)');
         previousDir = "right";
+        checkForCoin(pacManLeft+12.5, pacManTop+12.5);
       }else if (direction == "left" && squareOptions.left == true){
         pacManLeft-=jumpDist;
         pacManRight-=jumpDist;
         $('#pacman').css('left', pacManLeft + 'px');
         $('#pacman').css('transform', 'rotate(180deg)');
         previousDir = "left";
+        checkForCoin(pacManLeft+12.5, pacManTop+12.5);
       }else if (direction == "down" && squareOptions.down == true){
         pacManTop+=jumpDist;
         pacManBottom+=jumpDist;
         $('#pacman').css('top', pacManTop + 'px');
         $('#pacman').css('transform', 'rotate(90deg)');
         previousDir = "down";
+        checkForCoin(pacManLeft+12.5, pacManTop+12.5);
       }else if (direction == "up" && squareOptions.up == true){
         pacManTop-=jumpDist;
         pacManBottom-=jumpDist;
         $('#pacman').css('top', pacManTop + 'px');
         $('#pacman').css('transform', 'rotate(270deg)');
-        previousDir = "up"
+        previousDir = "up";
+        checkForCoin(pacManLeft+12.5, pacManTop+12.5);
       }
     }
 
@@ -783,6 +790,24 @@ $(function(){
         }
       }
     }
+  }
+
+  function removeCoin(pacLeft, pacTop){
+    $(document).find(".coin-icon").filter(function() {
+      return this.style['left'] == pacLeft && this.style['top'] == pacTop;
+    }).remove();
+  }
+
+  function checkForCoin(pacLeft, pacTop){
+    var coins = $('.coin-icon').filter(function() {
+        return this.style['top'] == (pacTop + "px") && this.style['left'] == (pacLeft + "px");
+    });
+    if(coins.length > 0){
+      removeCoin(pacLeft + "px", pacTop + "px");
+    }else{
+      console.log("Coin gone!");
+    }
+
   }
 
 });
