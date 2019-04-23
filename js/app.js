@@ -596,48 +596,62 @@ $(function(){
   //populate the screen with coins on page load
   addCoins();
 
-  //Event Listener that stop default action of spacebar being pressed
-  $(document).keydown(function(event) {
-    if(event.key == " " || event.key == "ArrowUp" || event.key == "ArrowDown" || event.key == "ArrowRight" || event.key == "ArrowLeft"){
-      event.preventDefault();
+  var countdownTimer;
+  var countdown = 3;
+  countdownTimer = setInterval(function(){
+    $("#score").html(countdown);
+    if (countdown == 0) {
+      clearInterval(countdownTimer);
+      $("#score").html("GO!");
+      runGame();
+    }else{
+      $("#score").html(countdown);
     }
-  })
+    countdown-=1;
+  }, 1000);
 
-  //Event Listener for keyboard presses
-  $(document).keyup(function(event) {
-
-    switch (event.key) {
-      case "ArrowUp":
-        changeDir("up");
-        break;
-      case "ArrowDown":
-        changeDir("down");
-        break;
-      case "ArrowRight":
-        changeDir("right");
-        break;
-      case "ArrowLeft":
-        changeDir("left");
-        break;
-      case "Enter":
+  function runGame(){
+    //Event Listener that stop default action of spacebar being pressed
+    $(document).keydown(function(event) {
+      if(event.key == " " || event.key == "ArrowUp" || event.key == "ArrowDown" || event.key == "ArrowRight" || event.key == "ArrowLeft"){
         event.preventDefault();
-        console.log("Left: " + pacManLeft);
-        console.log("Right: " + pacManRight);
-        console.log("Top: " + pacManTop);
-        console.log("Bottom: " + pacManBottom);
-        break;
-      case " ":
-        stopPac();
-        break;
-      case "c":
-        removeCoin();
-        break;
-      default:
-        console.log(event.key);
-    }
-  });
+      }
+    })
 
+    //Event Listener for keyboard presses
+    $(document).keyup(function(event) {
 
+      switch (event.key) {
+        case "ArrowUp":
+          changeDir("up");
+          break;
+        case "ArrowDown":
+          changeDir("down");
+          break;
+        case "ArrowRight":
+          changeDir("right");
+          break;
+        case "ArrowLeft":
+          changeDir("left");
+          break;
+        case "Enter":
+          event.preventDefault();
+          console.log("Left: " + pacManLeft);
+          console.log("Right: " + pacManRight);
+          console.log("Top: " + pacManTop);
+          console.log("Bottom: " + pacManBottom);
+          break;
+        case " ":
+          stopPac();
+          break;
+        case "c":
+          removeCoin();
+          break;
+        default:
+          console.log(event.key);
+      }
+    });
+  }
 
   //function for calling movePac on a timer until another direction key is pressed
   function changeDir(direction){
@@ -812,7 +826,6 @@ $(function(){
 
   function updateScore(){
     score+=10;
-    console.log(score);
-    $("#score").html(score);
+    $("#score").html("Current score: " + score);
   }
 });
