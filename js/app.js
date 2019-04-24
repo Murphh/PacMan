@@ -585,19 +585,12 @@ $(function(){
   /************************************************/
 
   var leaderboardScores = [];
-  var ghostsMoving = false;
   var ghosts = [];
   var pacMan = {};
   var score = 0;
-  //var previousDir;
   var jumpDist = 10;
   var intervalTimer;
-  //var pacManMoving = false;
 
-  //Pac Mans initial values for his position
-  var pacManLeft, pacManTop, pacManRight, pacManBottom;
-  var pacManHeight = $('#pacman').height();
-  var pacManWidth = $('#pacman').width();
 
   //Starts the Game!
   setupGame();
@@ -642,8 +635,10 @@ $(function(){
         clearInterval(countdownTimer);
         runGame();
 
-        ghostsMoving = true;
-        runGhosts();
+        changeDir(ghosts[0], "right");
+        changeDir(ghosts[1], "left");
+        changeDir(ghosts[2], "right");
+        changeDir(ghosts[3], "left");
       }else{
         $("#score").html(countdown);
       }
@@ -709,13 +704,7 @@ $(function(){
           console.log("Top: " + pacMan.top);
           console.log("Bottom: " + pacMan.bottom);
           break;
-        case "r":
-          event.preventDefault();
-          changeDir()
-          break;
         case " ":
-          stopObj(pacMan);
-          ghostsMoving = false;
           break;
         default:
       }
@@ -732,8 +721,8 @@ $(function(){
     if(!objType.moving){
       intervalTimer = setInterval(function(){
         //move him every 1/nth of a second
-        moveObj(pacMan, direction);
-      }, 150);
+        moveObj(objType, direction);
+      }, 200);
       objType.moving=true;
     }else{
       //if he is moving then stop the timer, and call recursively to get him moving in the new direction
@@ -746,13 +735,13 @@ $(function(){
   //Function for moving pacman in each of the four directions
   function moveObj(objType, direction){
 
-    if(objType.left== 565 && objType.top == 245 && previousDir == "right"){
+    if(objType.left== 565 && objType.top == 245 && objType.previousDir == "right"){
       objType.left = 5;
       objType.right = objType.left += 30;
       $(objType.id).css('left', objType.left + 'px');
       $(objType.id).css('transform', 'rotate(0deg)');
       objType.previousDir = "right";
-    }else if (objType.left <= -20 && objType.top == 245 && previousDir == "left") {
+    }else if (objType.left <= -20 && objType.top == 245 && objType.previousDir == "left") {
       objType.left = 565;
       objType.right = objType.left += 30;
       $(objType.id).css('left', objType.left + 'px');
@@ -760,41 +749,57 @@ $(function(){
       objType.previousDir = "left";
     }else{
       var squareOptions = checkOptions(objType);
+
+      var tempArr = [];
+      if(objType.id != "#pacman"){
+        $.each(squareOptions, function( key, value ) {
+           if(value == true){
+             tempArr.push(key);
+           }
+        });
+        tempArr = tempArr.filter(function(elem){
+          return elem != objType.oppDir;
+        });
+        direction = tempArr[Math.floor(Math.random() * tempArr.length)];
+      }
+
       if(direction == "right" && squareOptions.right == true){
         objType.left+=jumpDist;
         objType.right+=jumpDist;
         $(objType.id).css('left', objType.left + 'px');
         $(objType.id).css('transform', 'rotate(0deg)');
         objType.previousDir = "right";
-        checkForCoin(objType.left+12.5, objType.top+12.5);
+        objType.oppDir = "left";
       }else if (direction == "left" && squareOptions.left == true){
         objType.left-=jumpDist;
         objType.right-=jumpDist;
         $(objType.id).css('left', objType.left + 'px');
         $(objType.id).css('transform', 'rotate(180deg)');
         objType.previousDir = "left";
-        checkForCoin(objType.left+12.5, objType.top+12.5);
+        objType.oppDir = "right";
       }else if (direction == "down" && squareOptions.down == true){
         objType.top+=jumpDist;
         objType.bottom+=jumpDist;
         $(objType.id).css('top', objType.top + 'px');
         $(objType.id).css('transform', 'rotate(90deg)');
         objType.previousDir = "down";
-        checkForCoin(objType.left+12.5, objType.top+12.5);
+        objType.oppDir = "up";
       }else if (direction == "up" && squareOptions.up == true){
         objType.top-=jumpDist;
         objType.bottom-=jumpDist;
         $(objType.id).css('top', objType.top + 'px');
         $(objType.id).css('transform', 'rotate(270deg)');
         objType.previousDir = "up";
-        checkForCoin(objType.left+12.5, objType.top+12.5);
+        objType.oppDir = "down";
       }
+      checkSpace(objType);
     }
   }
-  //function for stopping pac moving
-  function stopObj(objType){
-    clearInterval(intervalTimer);
-    objType.moving = false;
+
+  function checkSpace(objType){
+    if(objType.id == "#pacman"){
+      checkForCoin(objType.left+12.5, objType.top+12.5)
+    }
   }
 
   function checkOptions(objType){
@@ -954,18 +959,6 @@ $(function(){
       currentGhost.id = "#ghost" + i;
       ghosts.push(currentGhost)
     }
-  }
-
-  function runGhosts(){
-    var timer;
-    timer = setInterval(function(){
-      if (ghostsMoving) {
-        console.log("Ghosts");
-      }else{
-        console.log("Stopped Ghosts");
-        clearInterval(timer);
-      }
-    }, 500);
   }
 
 });
