@@ -642,10 +642,17 @@ $(function(){
   }
 
 
-  function wonGame(){
-    stopObj(pacMan);
-    $("#score").remove();
-    $(".current-score-display").append('<h1>You Won!</h1>');
+  function gameEnd(outcome){
+    pause();
+    $(document).unbind("keyup");
+    $(".current-score-display").empty();
+    if(outcome == "win"){
+      $(".current-score-display").append('<h3>You Won! Your score was: <span id="score"></span></h3>');
+    }else{
+      $(".current-score-display").append('<h3>You Lose! Your score was: <span id="score"></span></h3>');
+      $("#score").html(score);
+    }
+
     $(".current-score-display").append('<button type="button" id="toLeaderboardButton">Add to Leaderboard</button>');
 
     $("#toLeaderboardButton").click(function(){
@@ -757,32 +764,43 @@ $(function(){
         objType.left+=jumpDist;
         objType.right+=jumpDist;
         $(objType.id).css('left', objType.left + 'px');
-        $(objType.id).css('transform', 'rotate(0deg)');
+        //$(objType.id).css('transform', 'rotate(0deg)');
         objType.previousDir = "right";
         objType.oppDir = "left";
       }else if (direction == "left" && squareOptions.left == true){
         objType.left-=jumpDist;
         objType.right-=jumpDist;
         $(objType.id).css('left', objType.left + 'px');
-        $(objType.id).css('transform', 'rotate(180deg)');
+        //$(objType.id).css('transform', 'rotate(180deg)');
         objType.previousDir = "left";
         objType.oppDir = "right";
       }else if (direction == "down" && squareOptions.down == true){
         objType.top+=jumpDist;
         objType.bottom+=jumpDist;
         $(objType.id).css('top', objType.top + 'px');
-        $(objType.id).css('transform', 'rotate(90deg)');
+        //$(objType.id).css('transform', 'rotate(90deg)');
         objType.previousDir = "down";
         objType.oppDir = "up";
       }else if (direction == "up" && squareOptions.up == true){
         objType.top-=jumpDist;
         objType.bottom-=jumpDist;
         $(objType.id).css('top', objType.top + 'px');
-        $(objType.id).css('transform', 'rotate(270deg)');
+        //$(objType.id).css('transform', 'rotate(270deg)');
         objType.previousDir = "up";
         objType.oppDir = "down";
       }
       checkSpace(objType);
+      checkCollisions();
+    }
+  }
+
+  function checkCollisions(){
+    var directions = ["left", "right", "top", "bottom"];
+
+    for (var i = 0; i < ghosts.length; i++) {
+      if(pacMan.left >= ghosts[i].left && pacMan.left <= ghosts[i].right && pacMan.top >= ghosts[i].top && pacMan.top <= ghosts[i].bottom){
+        gameEnd("lose");
+      }
     }
   }
 
@@ -883,7 +901,7 @@ $(function(){
     score+=10;
     $("#score").html("Current score: " + score);
     if(score==5680){
-      wonGame();
+      gameEnd("won");
     }
   }
 
@@ -940,6 +958,7 @@ $(function(){
   }
 
   function setGhostPositions(){
+    ghosts.length = 0;
     for (var i = 0; i < 4; i++) {
       var currentGhost = {};
       currentGhost.left = $("#ghost" + i).position().left;

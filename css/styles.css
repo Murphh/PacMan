@@ -99,7 +99,7 @@ body {
   font-weight: bold;
   font-size: 0.9em;
 }
-.current-score-display h1 {
+.current-score-display h1, .current-score-display h3 {
   margin: 0;
   display: inline-block;
 }
