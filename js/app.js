@@ -589,7 +589,7 @@ $(function(){
   var pacMan = {};
   var score = 0;
   var jumpDist = 10;
-  var intervalTimer;
+  var paused = false;
 
 
   //Starts the Game!
@@ -697,7 +697,7 @@ $(function(){
           changeDir(pacMan, "left");
           break;
         case " ":
-          console.log("Pause game function goes here!");
+          pause();
           break;
         default:
       }
@@ -711,12 +711,12 @@ $(function(){
   //function for calling movePac on a timer until another direction key is pressed
   function changeDir(objType, direction){
     if(!objType.moving){
-      intervalTimer = setInterval(function(){
+      objType.timer = setInterval(function(){
         moveObj(objType, direction);
       }, 200);
       objType.moving=true;
     }else{
-      clearInterval(intervalTimer);
+      clearInterval(objType.timer);
       objType.moving = false;
       changeDir(objType, direction);
     }
@@ -910,8 +910,25 @@ $(function(){
     }
   }
 
+
+  function pause(){
+    if(!paused){
+      paused = true;
+      clearInterval(pacMan.timer);
+      for(var i=0; i < ghosts.length; i++){
+        clearInterval(ghosts[i].timer);
+      }
+    }else {
+      paused = false;
+      changeDir(pacMan, pacMan.previousDir);
+      for(var i=0; i < ghosts.length; i++){
+        changeDir(ghosts[i], ghosts[i].previousDir);
+      }
+    }
+  }
+
   /**********************************************/
-  /*-----------Ghosts Funcs---------------------*/
+  /*-----------Ghosts Setup Funcs---------------*/
   /**********************************************/
 
   function addGhosts(){
