@@ -145,22 +145,22 @@ body {
   z-index: 11;
 }
 
-.ghost0{
+#ghost0{
   top: 15px;
   left: 15px;
 }
 
-.ghost1{
+#ghost1{
   top: 15px;
   left: 525px;
 }
 
-.ghost2{
+#ghost2{
   top: 505px;
   left: 15px;
 }
 
-.ghost3{
+#ghost3{
   top: 505px;
   left: 525px;
 }

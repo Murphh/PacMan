@@ -585,6 +585,7 @@ $(function(){
   /************************************************/
 
   var leaderboardScores = [];
+  var ghostsMoving = false;
   var ghosts = [];
   var pacMan = {};
   var score = 0;
@@ -640,12 +641,16 @@ $(function(){
       if (countdown == 0) {
         clearInterval(countdownTimer);
         runGame();
+
+        ghostsMoving = true;
+        runGhosts();
       }else{
         $("#score").html(countdown);
       }
       countdown-=1;
     }, 500);
   }
+
 
   function wonGame(){
     stopObj(pacMan);
@@ -710,6 +715,7 @@ $(function(){
           break;
         case " ":
           stopObj(pacMan);
+          ghostsMoving = false;
           break;
         default:
       }
@@ -931,7 +937,7 @@ $(function(){
 
   function addGhosts(){
     for (var i = 0; i < 4; i++) {
-      var html = '<img src="img/ghost' + i + '.png" class="ghosts ghost' + i + '" alt="">';
+      var html = '<img src="img/ghost' + i + '.png" class="ghosts" id="ghost' + i + '" alt="">';
       $(".game-area").append(html);
     }
     setGhostPositions();
@@ -940,13 +946,26 @@ $(function(){
   function setGhostPositions(){
     for (var i = 0; i < 4; i++) {
       var currentGhost = {};
-      currentGhost.left = $(".ghost" + i).position().left;
-      currentGhost.right = $(".ghost" + i).position().left + $(".ghost" + 1).width();
-      currentGhost.top = $(".ghost" + i).position().top;
-      currentGhost.bottom = $(".ghost" + i).position().top + $(".ghost" + 1).height();
+      currentGhost.left = $("#ghost" + i).position().left;
+      currentGhost.right = $("#ghost" + i).position().left + $("#ghost" + 1).width();
+      currentGhost.top = $("#ghost" + i).position().top;
+      currentGhost.bottom = $("#ghost" + i).position().top + $("#ghost" + 1).height();
       currentGhost.moving = false;
+      currentGhost.id = "#ghost" + i;
       ghosts.push(currentGhost)
     }
+  }
+
+  function runGhosts(){
+    var timer;
+    timer = setInterval(function(){
+      if (ghostsMoving) {
+        console.log("Ghosts");
+      }else{
+        console.log("Stopped Ghosts");
+        clearInterval(timer);
+      }
+    }, 500);
   }
 
 });
