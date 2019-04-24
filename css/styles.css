@@ -25,17 +25,21 @@ body {
 .game-display {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   height: 672px;
   width: 100%;
 }
 
 .current-game, .leaderboard-display {
-  width: 50%;
   height: 100%;
+  min-width: 718px;
+  max-width: 718px;
+  margin: 0 auto;
 }
 
 .current-game, .leaderboard-display {
   display: flex;
+  flex-wrap: wrap;
   flex-direction: column;
   justify-content: space-around;
 }
@@ -122,6 +126,7 @@ body {
   border: solid 3px yellow;
   border-radius: 20px;
   overflow: hidden;
+  /*flex-basis: 650px;*/
 }
 
 .background-img{

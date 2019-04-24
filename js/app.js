@@ -590,7 +590,7 @@ $(function(){
   var score = 0;
   var jumpDist = 10;
   var paused = false;
-
+  var musicTimer;
 
   //Starts the Game!
   setupGame();
@@ -645,6 +645,7 @@ $(function(){
   function gameEnd(outcome){
     pause();
     $(document).unbind("keyup");
+    clearInterval(musicTimer);
     $(".current-score-display").empty();
     if(outcome == "win"){
       $(".current-score-display").append('<h3>You Won! Your score was: <span id="score"></span></h3>');
@@ -672,8 +673,15 @@ $(function(){
   /*--Func for setting event listeners on game--*/
   /**********************************************/
 
+  function turnOnMusic(){
+    musicTimer = setInterval(function(){
+      $("audio")[0].play();
+    }, 50);
+  }
+
   function runGame(){
 
+    turnOnMusic();
     $("#score").html("GO!");
     changeDir(ghosts[0], "right");
     changeDir(ghosts[1], "left");
