@@ -634,11 +634,6 @@ $(function(){
       if (countdown == 0) {
         clearInterval(countdownTimer);
         runGame();
-
-        changeDir(ghosts[0], "right");
-        changeDir(ghosts[1], "left");
-        changeDir(ghosts[2], "right");
-        changeDir(ghosts[3], "left");
       }else{
         $("#score").html(countdown);
       }
@@ -673,6 +668,10 @@ $(function(){
   function runGame(){
 
     $("#score").html("GO!");
+    changeDir(ghosts[0], "right");
+    changeDir(ghosts[1], "left");
+    changeDir(ghosts[2], "right");
+    changeDir(ghosts[3], "left");
 
     //Event Listener that stop default action of spacebar being pressed
     $(document).keydown(function(event) {
@@ -697,14 +696,8 @@ $(function(){
         case "ArrowLeft":
           changeDir(pacMan, "left");
           break;
-        case "Enter":
-          event.preventDefault();
-          console.log("Left: " + pacMan.left);
-          console.log("Right: " + pacMan.right);
-          console.log("Top: " + pacMan.top);
-          console.log("Bottom: " + pacMan.bottom);
-          break;
         case " ":
+          console.log("Pause game function goes here!");
           break;
         default:
       }
@@ -717,15 +710,12 @@ $(function(){
 
   //function for calling movePac on a timer until another direction key is pressed
   function changeDir(objType, direction){
-    //if Pac isnt already moving
     if(!objType.moving){
       intervalTimer = setInterval(function(){
-        //move him every 1/nth of a second
         moveObj(objType, direction);
       }, 200);
       objType.moving=true;
     }else{
-      //if he is moving then stop the timer, and call recursively to get him moving in the new direction
       clearInterval(intervalTimer);
       objType.moving = false;
       changeDir(objType, direction);
@@ -812,17 +802,12 @@ $(function(){
     }
 
     if(objType.previousDir == "right" || objType.previousDir == "left"){
-      previousOpt.up = false;
-      previousOpt.down = false;
       previousOpt.left = true;
       previousOpt.right = true;
     }else if (objType.previousDir == "up" || objType.previousDir == "down") {
       previousOpt.up = true;
       previousOpt.down = true;
-      previousOpt.left = false;
-      previousOpt.right = false;
     }
-
     return previousOpt;
   }
 
@@ -833,29 +818,22 @@ $(function(){
   //function for adding coins to the screen
   function addCoins(){
 
-    //The number of squares that we will looping through
-    var numberOfSquares = decisionSquares.length;
-    //loop through all the squares
-    for (var y = 0; y < numberOfSquares; y++) {
-      //current square
+    for (var y = 0; y < decisionSquares.length; y++) {
       var startSquare = decisionSquares[y];
-      var numOfConnectedSquares = startSquare.connectedSquares.length;
       //loop through each square connected to the current square
-      for (var x = 0; x < numOfConnectedSquares; x++) {
+      for (var x = 0; x < startSquare.connectedSquares.length; x++) {
+        var startLeft = startSquare.leftPosition + 12.5;
+        var startTop = startSquare.topPosition + 12.5;
+
         //if the current square is horizontal to its connected square
         if(startSquare.topPosition == decisionSquares[startSquare.connectedSquares[x]].topPosition){
-          //the values the coins will go between
-          var startLeft = startSquare.leftPosition + 12.5;
-          var startTop = startSquare.topPosition + 12.5;
-          var endLeft = decisionSquares[startSquare.connectedSquares[x]].leftPosition + 12.5;
 
-          //if moving in the positive direction
+          var endLeft = decisionSquares[startSquare.connectedSquares[x]].leftPosition + 12.5;
           if(endLeft > startLeft){
             for (var i = startLeft; i <= endLeft; i+=10) {
               $(".game-area").append('<img src="img/coin.png" class="coin-icon" style="left:' + i + 'px; top: ' + startTop + 'px">');
             }
           }
-          //if moving in the negative direction
           else{
             for (var i = startLeft; i >= endLeft; i-=10) {
               $(".game-area").append('<img src="img/coin.png" class="coin-icon" style="left:' + i + 'px; top: ' + startTop + 'px">');
@@ -864,17 +842,13 @@ $(function(){
         }
         //if the current square is vertical from its connected square
         if (startSquare.leftPosition == decisionSquares[startSquare.connectedSquares[x]].leftPosition) {
-          //the values the coins will go between
-          var startLeft = startSquare.leftPosition + 12.5;
-          var startTop = startSquare.topPosition + 12.5;
+
           var endTop = decisionSquares[startSquare.connectedSquares[x]].topPosition + 12.5;
-          //if moving in the negative direction
           if (startTop > endTop) {
             for (var i = startTop; i >= endTop; i-=10) {
               $(".game-area").append('<img src="img/coin.png" class="coin-icon" style="left:' + startLeft + 'px; top: ' + i + 'px">');
             }
           }
-          //if moving in the positive direction
           else{
             for (var i = startTop; i <= endTop; i+=10) {
               $(".game-area").append('<img src="img/coin.png" class="coin-icon" style="left:' + startLeft + 'px; top: ' + i + 'px">');
