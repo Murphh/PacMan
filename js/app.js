@@ -160,7 +160,7 @@ $(function(){
     $(".current-score-display").append('<button type="button" id="toLeaderboardButton">Add to Leaderboard</button>');
 
     $("#toLeaderboardButton").click(function(){
-      $(".current-score-display h1").remove();
+      $(".current-score-display h3").remove();
       $("#toLeaderboardButton").remove();
       $(".current-score-display").append('<input id="playerName" type="text" placeholder="Name">');
       $(".current-score-display").append('<button type="button" id="addToBoard">Add to Leaderboard</button>');

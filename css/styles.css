@@ -39,13 +39,18 @@ body {
 
 .current-game, .leaderboard-display {
   display: flex;
-  flex-wrap: wrap;
   flex-direction: column;
-  justify-content: space-around;
 }
 
 .current-game {
   padding-top: 10px;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.leaderboard-display {
+  justify-content: flex-start;
+  flex-wrap: nowrap;
 }
 
 .leaderboard {
@@ -53,6 +58,8 @@ body {
   flex-direction: column;
   width: 80%;
   min-height: 550px;
+  max-height: 550px;
+  overflow: hidden;
   color: yellow;
   text-align: center;
   align-self: center;
@@ -62,12 +69,12 @@ body {
 .leaderboard-row {
   display: flex;
   height: 50px;
-  width: 100%;
+  width: 90%;
   background-color: darkblue;
   justify-content: space-around;
   border: solid 3px yellow;
   border-radius: 10px;
-  margin-bottom: 20px;
+  margin: 10px 5% 20px;
 }
 
 .leaderboard p {
@@ -79,41 +86,63 @@ body {
   margin: 10px auto;
 }
 
-.current-score-display, .leaderboard-title {
+.current-score-display, .leaderboard-title, .leaderboard-filter {
   width: 80%;
   padding: 10px 0 10px;
   align-self: center;
-  background-color: darkblue;
-  border: solid 3px yellow;
   color: yellow;
-  border-radius: 10px;
   text-align: center;
 }
-
+.leaderboard-title {
+  margin-left: 10%;
+  margin-right: 10%;
+}
 .current-score-display{
   display: flex;
   justify-content: space-around;
+  padding: 0;
 }
 
-.current-score-display button {
-  height: 50px;
-  width: 200px;
+#startGame {
+  width: 80%;
+  height: 60px;
+}
+
+.current-score-display button, .leaderboard-filter button {
+  height: 40px;
+  width: 150px;
   background-color: dodgerblue;
   border: solid 3px yellow;
   color: yellow;
   border-radius: 5px;
   font-weight: bold;
-  font-size: 0.9em;
+  font-size: 1.1em;
+}
+
+#toLeaderboardButton{
+  width: 220px;
+  height: 60px
+}
+
+#addToBoard {
+  width: 200px;
 }
 .current-score-display h1, .current-score-display h3 {
   margin: 0;
   display: inline-block;
 }
+
+.current-score-display h3 {
+  height: 20px;
+  margin: 20px auto;
+}
 .current-score-display button:hover {
   background-color: darkblue;
   cursor: pointer;
 }
-.current-score-display input[type="text"]{
+.current-score-display input[type="text"], .leaderboard-filter input[type="text"]{
+  box-sizing: border-box;
+  height: 40px;
   width: 55%;
   border: solid 3px yellow;
   border-radius: 5px;
@@ -128,7 +157,6 @@ body {
   border: solid 3px yellow;
   border-radius: 20px;
   overflow: hidden;
-  /*flex-basis: 650px;*/
 }
 
 .background-img{
