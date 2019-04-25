@@ -166,6 +166,7 @@ $(function(){
     pacMan.bottom = $('#pacman').position().top + $('#pacman').height();
     pacMan.id = "#pacman";
     pacMan.moving = false;
+    pacMan.speed = 200;
   }
 
   function startCounter(){
@@ -278,7 +279,7 @@ $(function(){
     if(!objType.moving){
       objType.timer = setInterval(function(){
         moveObj(objType, direction);
-      }, 200);
+      }, objType.speed);
       objType.moving=true;
     }else{
       clearInterval(objType.timer);
@@ -322,28 +323,28 @@ $(function(){
         objType.left+=jumpDist;
         objType.right+=jumpDist;
         $(objType.id).css('left', objType.left + 'px');
-        //$(objType.id).css('transform', 'rotate(0deg)');
+        $(objType.id).css('transform', 'rotate(0deg)');
         objType.previousDir = "right";
         objType.oppDir = "left";
       }else if (direction == "left" && squareOptions.left == true){
         objType.left-=jumpDist;
         objType.right-=jumpDist;
         $(objType.id).css('left', objType.left + 'px');
-        //$(objType.id).css('transform', 'rotate(180deg)');
+        $(objType.id).css('transform', 'rotate(180deg)');
         objType.previousDir = "left";
         objType.oppDir = "right";
       }else if (direction == "down" && squareOptions.down == true){
         objType.top+=jumpDist;
         objType.bottom+=jumpDist;
         $(objType.id).css('top', objType.top + 'px');
-        //$(objType.id).css('transform', 'rotate(90deg)');
+        $(objType.id).css('transform', 'rotate(90deg)');
         objType.previousDir = "down";
         objType.oppDir = "up";
       }else if (direction == "up" && squareOptions.up == true){
         objType.top-=jumpDist;
         objType.bottom-=jumpDist;
         $(objType.id).css('top', objType.top + 'px');
-        //$(objType.id).css('transform', 'rotate(270deg)');
+        $(objType.id).css('transform', 'rotate(270deg)');
         objType.previousDir = "up";
         objType.oppDir = "down";
       }
@@ -459,7 +460,7 @@ $(function(){
     score+=10;
     $("#score").html("Current score: " + score);
     $("#eatMusic")[0].play();
-    if(score==250){
+    if(score==6820){
       gameEnd("win");
     }
   }
@@ -531,6 +532,7 @@ $(function(){
       currentGhost.bottom = $("#ghost" + i).position().top + $("#ghost" + 1).height();
       currentGhost.moving = false;
       currentGhost.id = "#ghost" + i;
+      currentGhost.speed = 150;
       ghosts.push(currentGhost)
     }
   }
