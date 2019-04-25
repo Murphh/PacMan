@@ -125,6 +125,7 @@ body {
 #startGame {
   width: 80%;
   height: 60px;
+  display: none;
 }
 
 .current-score-display button, .leaderboard-filter button, .options-button{

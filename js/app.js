@@ -78,6 +78,7 @@ $(function(){
   var score = 0;
   var jumpDist = 10;
   var paused = false;
+  var difficulty;
 
   for(var i =0; i < data.length; i++){
     decisionSquares[i] = addSquare(data[i]);
@@ -143,11 +144,20 @@ $(function(){
   function setupGame(){
     $(".current-score-display").empty();
     $(".current-score-display").append('<button type="button" id="startGame">Start Game!</button>');
+    $(".current-score-display").append('<button type="button" class="difficulty">Easy</button>');
+    $(".current-score-display").append('<button type="button" class="difficulty">Hard</button>');
+    $(".current-score-display").append('<button type="button" class="difficulty">Trump Mode</button>');
+
     score = 0;
     addPacMan();
-    addGhosts();
 
     addCoins();
+
+    $(".difficulty").click(function(){
+      setDifficulty($(this).html());
+      $("#startGame").css("display", "block");
+      $(".difficulty").remove();
+    });
 
     $("#startGame").click(function(){
       $("#pressMusic")[0].play();
@@ -156,6 +166,24 @@ $(function(){
       startCounter();
     });
   }
+
+  function setDifficulty(htmlString){
+    difficulty = htmlString;
+    switch (htmlString) {
+      case "Easy":
+        addGhosts("ghost", 250);
+        break;
+      case "Hard":
+        addGhosts("ghost", 120);
+        break;
+      case "Trump Mode":
+        addGhosts("trump", 150);
+        break;
+      default:
+
+    }
+  };
+
 
   function addPacMan(){
     $(".game-area").empty();
@@ -224,21 +252,6 @@ $(function(){
     musicTimer = setInterval(function(){
       $("#themeMusic")[0].play();
     }, 50);
-  }
-
-  function spawnFruit(){
-    var counter = 0;
-    var fruitTimer = setInterval(function(){
-      if(counter % 10 == 0){
-        console.log("5 Seconds!");
-        var random = Math.floor(Math.random() * 63);
-        console.log(decisionSquares[random]);
-        var html = '<img src="img/pacman.png" class="fruit"  id="fruit" style="left:' + decisionSquares[random].leftPosition + 'px; top: ' + decisionSquares[random].topPosition +'px">';
-        $(".game-area").append(html);
-
-      }
-      counter++;
-    }, 500);
   }
 
   function runGame(){
@@ -372,19 +385,19 @@ $(function(){
 
   function checkCollisions(){
     for (var i = 0; i < ghosts.length; i++) {
-      if(pacMan.left >= ghosts[i].left && pacMan.left <= ghosts[i].right && pacMan.top >= ghosts[i].top && pacMan.top <= ghosts[i].bottom){
+      if(pacMan.left >= ghosts[i].left && pacMan.left <= ghosts[i].right && pacMan.top == ghosts[i].top ){
         gameEnd("lose");
       }
-      if(pacMan.right <= ghosts[i].right && pacMan.right >= ghosts[i].left && pacMan.top >= ghosts[i].top && pacMan.top <= ghosts[i].bottom){
+      if(pacMan.right <= ghosts[i].right && pacMan.right >= ghosts[i].left && pacMan.top == ghosts[i].top ){
         gameEnd("lose");
       }
-      // if(pacMan.top >= ghosts[i].top && pacMan.top <= ghosts[i].bottom && pacMan.left >= ghosts[i].left && pacMan.left <= ghosts[i].right){
-      //   gameEnd("lose");
-      // }
-      // if(pacMan.bottom <= ghosts[i].bottom && pacMan.bottom >= ghosts[i].top && pacMan.top >= ghosts[i].top && pacMan.top <= ghosts[i].bottom){
-      //   gameEnd("lose");
-      // }
 
+      if(pacMan.top >= ghosts[i].top && pacMan.top <= ghosts[i].bottom && pacMan.left == ghosts[i].left){
+        gameEnd("lose");
+      }
+      if(pacMan.bottom <= ghosts[i].bottom && pacMan.bottom >= ghosts[i].top && pacMan.left == ghosts[i].left){
+        gameEnd("lose");
+      }
     }
   }
 
@@ -482,12 +495,19 @@ $(function(){
   /*************************************/
 
   function updateScore(){
-    score+=10;
+    if(difficulty == "Easy" || difficulty == "Trump Mode"){
+      score+=10;
+      if(score==6820){
+        gameEnd("win");
+      }
+    }else{
+      score+=20;
+      if(score==13640){
+        gameEnd("win");
+      }
+    }
     $("#score").html("Current score: " + score);
     $("#eatMusic")[0].play();
-    if(score==6820){
-      gameEnd("win");
-    }
   }
 
   function updateBoard(){
@@ -538,15 +558,21 @@ $(function(){
   /*-----------Ghosts Setup Funcs---------------*/
   /**********************************************/
 
-  function addGhosts(){
+  function addGhosts(img, speed){
+    var html;
     for (var i = 0; i < 4; i++) {
-      var html = '<img src="img/ghost' + i + '.png" class="ghosts" id="ghost' + i + '" alt="">';
+      if(img == "ghost"){
+        html = '<img src="img/ghost' + i + '.png" class="ghosts" id="ghost' + i + '" alt="">';
+      }else{
+        html = '<img src="img/trump.png" class="ghosts" id="ghost' + i + '" alt="">';
+      }
+
       $(".game-area").append(html);
     }
-    setGhostPositions();
+    setGhostPositions(speed);
   }
 
-  function setGhostPositions(){
+  function setGhostPositions(speed){
     ghosts.length = 0;
     for (var i = 0; i < 4; i++) {
       var currentGhost = {};
@@ -556,9 +582,25 @@ $(function(){
       currentGhost.bottom = $("#ghost" + i).position().top + $("#ghost" + 1).height();
       currentGhost.moving = false;
       currentGhost.id = "#ghost" + i;
-      currentGhost.speed = 150;
+      currentGhost.speed = speed;
       ghosts.push(currentGhost)
     }
   }
+
+  function spawnFruit(){
+    var counter = 0;
+    var fruitTimer = setInterval(function(){
+      if(counter % 10 == 0){
+        $("#fruit").remove();
+        var random = Math.floor(Math.random() * 63);
+        console.log(decisionSquares[random]);
+        var html = '<img src="img/pacman.png" class="fruit"  id="fruit" style="left:' + decisionSquares[random].leftPosition + 'px; top: ' + decisionSquares[random].topPosition +'px">';
+        $(".game-area").append(html);
+
+      }
+      counter++;
+    }, 500);
+  }
+
 
 });
