@@ -11,6 +11,7 @@
     <title>PACMAN Clone</title>
   </head>
   <body>
+    <!--  Header bar with title and images-->
     <div class="header-bar">
       <img src="img/pacman.png" class="header-img">
       <img src="img/ghost1.png" class="header-img">
@@ -19,10 +20,8 @@
       <img src="img/pacman.png" class="header-img">
     </div>
 
+    <!--  High level containers that will have content displayed largely dynamically-->
     <div class="game-display">
-      <audio id="themeMusic">
-        <source src="music/theme.wav">
-      </audio>
       <div class="current-game">
         <div class="current-score-display">
         </div>
@@ -30,6 +29,8 @@
         </div>
       </div>
       <div class="options-display">
+
+        <!-- Buttons for viewing/querying the leaderboard or instructions -->
         <div class="display-choice">
           <button type="button" class="options-button active-button" id="instructionsButton" name="button">Instructions</button>
           <button type="button" class="options-button" id ="leaderboardButton"name="button">Leaderboard</button>
@@ -43,11 +44,14 @@
           </div>
         </div>
 
+        <!--  Collection of instructions for the user-->
         <div id="instructionsOption">
           <h1>Instructions</h1>
           <h2>Welcome to browser based PacMan!</h2>
           <h2>The more coins you eat, the higher your score</h2>
-          <h2>If the ghosts touch you, it's GAME OVER</h2>
+          <h2>You can choose to play the EASY MODE, HARD MODE, or DONALD TRUMP MODE</h2>
+          <h2>The harder the difficulty the better your score</h2>
+          <h2>If the enemies touch you, it's GAME OVER</h2>
           <h2>If you want to take a break, press the SPACE BAR to pause</h2>
           <h2>UP ARROW to move PacMan up</h2>
           <h2>DOWN ARROW to move PacMan down</h2>
@@ -59,20 +63,11 @@
       </div>
     </div>
 
-    <audio id="eatMusic">
-      <source src="music/eat-coin.wav"></source>
-    </audio>
-
-    <audio id="deathMusic">
-      <source src="music/pacman-death.wav"></source>
-    </audio>
-
-    <audio id="pressMusic">
-      <source src="music/button-press.mp3"></source>
-    </audio>
-
-    <audio id="winMusic">
-      <source src="music/pacman-win.wav"></source>
-    </audio>
+    <!--  All the different audio sources used in the game-->
+    <audio id="eatMusic"><source src="music/eat-coin.wav"></source></audio>
+    <audio id="deathMusic"><source src="music/pacman-death.wav"></source></audio>
+    <audio id="pressMusic"><source src="music/button-press.mp3"></source></audio>
+    <audio id="winMusic"><source src="music/pacman-win.wav"></source></audio>
+    <audio id="themeMusic"><source src="music/theme.wav"></audio>
   </body>
 </html>

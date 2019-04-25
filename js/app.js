@@ -1,6 +1,9 @@
 $(function(){
+
   /**********************************************************/
   /*---------Hard Coded Data for decison squares -----------*/
+  /* Represents the squares on the board on which you can   */
+  /* change direction                                       */
   /**********************************************************/
   var data = [[15, 15, false, true, true, false, [1, 6]],
   [125, 15, false, true, true, true, [0, 2, 7]],
@@ -12,7 +15,7 @@ $(function(){
   [125, 85, true, true, true, true, [1, 6, 8, 15]],
   [185, 85, false, true, true, true, [7, 9, 16]],
   [245, 85, true, true, false, true, [2, 8, 10]],
-  [305, 85, true, true, false, true, [3, 9, 11]], //10
+  [305, 85, true, true, false, true, [3, 9, 11]],
   [365, 85, false, true, true, true, [10, 12, 19]],
   [425, 85, true, true, true, true, [4, 11, 13, 20]],
   [525, 85, true, false, true, true, [5, 12, 21]],
@@ -68,7 +71,8 @@ $(function(){
   [525, 505, true, false, false, true, [59, 62]]];
 
   /************************************************/
-  /*----Initial Var Setup & Running of Game-------*/
+  /*----        Initial Variable Set       -------*/
+  /*- Global Variables which are used throughout -*/
   /************************************************/
 
   var decisionSquares = [];
@@ -79,56 +83,14 @@ $(function(){
   var jumpDist = 10;
   var paused = false;
   var difficulty;
+  var maxScore = 6820;
 
+  //creates an object from each row of the hard coded data
   for(var i =0; i < data.length; i++){
     decisionSquares[i] = addSquare(data[i]);
   }
 
-  //Starts the Game!
-  setupGame();
-
-  $("#filterScores").click(function(){
-    $("#pressMusic")[0].play();
-    $("#filterVal").val("");
-    $(".leaderboard").empty();
-    var numOfEntries = 0;
-    for (var i = 0; i < leaderboardScores.length; i++) {
-      if(leaderboardScores[i].name == $("#filterVal").val()){
-        addRow(numOfEntries, leaderboardScores[i]);
-      }
-    }
-  });
-
-  $("#instructionsButton").click(function(){
-    optionsChange("#leaderboardOption", "#instructionsOption", "#leaderboardButton", "#instructionsButton");
-  });
-
-  $("#leaderboardButton").click(function(){
-      optionsChange("#instructionsOption", "#leaderboardOption", "#instructionsButton", "#leaderboardButton");
-  });
-
-  function optionsChange(offVar, onVar, offButton, onButton){
-    $("#pressMusic")[0].play();
-    $(offVar).css("display", "none");
-    $(onVar).css("display", "block")
-    $(offButton).removeClass("active-button");
-    $(onButton).addClass("active-button");
-  }
-
-  function addRow(rowNum, entry){
-    var rowId = "row" + rowNum;
-    var currentName = "<p>" + entry.name + "</p>"
-    var currentScore = "<p>" + entry.gameScore + "</p>";
-    $(".leaderboard").prepend('<div class="leaderboard-row" id="' + rowId + '"></div>');
-    rowId = "#" + rowId;
-    $(rowId).append(currentName);
-    $(rowId).append(currentScore);
-  }
-
-  /*********************************************/
-  /*----Funcs for starting/ending Game---------*/
-  /*********************************************/
-
+  //object builder function for each square of the board where you can change direction
   function addSquare(dataRow){
     var tempObj = {};
     tempObj.leftPosition = dataRow[0];
@@ -141,6 +103,104 @@ $(function(){
     return tempObj;
   }
 
+  /*************************************************/
+  /*------------------Game Start-------------------*/
+  /* Sets up the game when the page loads and adds */
+  /* event listeners to the leaderboard options    */
+  /*************************************************/
+
+  setupGame();
+
+  //filter the leaderboard based on user input
+  $("#filterScores").click(function(){
+    $("#pressMusic")[0].play();
+    $(".leaderboard").empty();
+    var numOfEntries = 0;
+    for (var i = 0; i < leaderboardScores.length; i++) {
+      if(leaderboardScores[i].name == $("#filterVal").val()){
+        addRow(numOfEntries, leaderboardScores[i]);
+      }
+    }
+      $("#filterVal").val("");
+  });
+
+  $("#instructionsButton").click(function(){
+    optionsChange("#leaderboardOption", "#instructionsOption", "#leaderboardButton", "#instructionsButton");
+  });
+
+  $("#leaderboardButton").click(function(){
+    optionsChange("#instructionsOption", "#leaderboardOption", "#instructionsButton", "#leaderboardButton");
+  });
+
+  /************************************************/
+  /*----     GUI Manipulation Functions    -------*/
+  /************************************************/
+
+  //Highlights whether youre viewing the leaderboardButton or instructions page
+  function optionsChange(offVar, onVar, offButton, onButton){
+    $("#pressMusic")[0].play();
+    $(offVar).css("display", "none");
+    $(onVar).css("display", "block")
+    $(offButton).removeClass("active-button");
+    $(onButton).addClass("active-button");
+  }
+
+  //creates an entry pm the leaderboard
+  function addRow(rowNum, entry){
+    var rowId = "row" + rowNum;
+    var currentName = "<p>" + entry.name + "</p>"
+    var currentScore = "<p>" + entry.gameScore + "</p>";
+    $(".leaderboard").prepend('<div class="leaderboard-row" id="' + rowId + '"></div>');
+    rowId = "#" + rowId;
+    $(rowId).append(currentName);
+    $(rowId).append(currentScore);
+  }
+
+  //Updates our records for the leaderboard and then displays it to the user interface
+  function updateBoard(){
+    if($("#playerName").val()){
+      leaderboardScores.push({
+        name: $("#playerName").val(),
+        gameScore: score
+      });
+      $(".leaderboard").empty();
+
+      //sorts the leaderboard data from highest to lowest
+      leaderboardScores.sort(function(obj1, obj2) {
+        return obj1.gameScore - obj2.gameScore;
+      });
+
+      for (var i = 0; i < leaderboardScores.length && i <=4;  i++) {
+        addRow(i, leaderboardScores[i]);
+      }
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  //Updates the players score dependant on the game difficulty
+  function updateScore(type){
+    if(difficulty == "Easy" || difficulty == "Trump Mode"){
+      score+=10;
+      if(score==maxScore){
+        gameEnd("win");
+      }
+    }else{
+      score+=20;
+      if(score==(maxScore*2)){
+        gameEnd("win");
+      }
+    }
+    $("#score").html("Current score: " + score);
+    $("#eatMusic")[0].play();
+  }
+
+  /*********************************************/
+  /*-----------------Game Setup----------------*/
+  /*********************************************/
+
+  //Displays difficulty options to the user
   function setupGame(){
     $(".current-score-display").empty();
     $(".current-score-display").append('<button type="button" id="startGame">Start Game!</button>');
@@ -148,11 +208,12 @@ $(function(){
     $(".current-score-display").append('<button type="button" class="difficulty">Hard</button>');
     $(".current-score-display").append('<button type="button" class="difficulty">Trump Mode</button>');
 
+    //resets user score to 0 and adds PacMan append all the coins to the board
     score = 0;
     addPacMan();
-
     addCoins();
 
+    //on clicks the difficulty is set and the game countdown begins
     $(".difficulty").click(function(){
       setDifficulty($(this).html());
       $("#startGame").css("display", "block");
@@ -167,6 +228,32 @@ $(function(){
     });
   }
 
+  //3,2,1 countdown for game starting
+  function startCounter(){
+    var countdownTimer;
+    var countdown = 3;
+    countdownTimer = setInterval(function(){
+      $("#score").html(countdown);
+
+      //when it reaches 0, stop the timer and run the game
+      if (countdown == 0) {
+        clearInterval(countdownTimer);
+        runGame();
+      }else{
+        $("#score").html(countdown);
+      }
+      countdown--;
+    }, 500);
+  }
+
+  //turns on the game background music, cleared when the game ends
+  function turnOnMusic(){
+    musicTimer = setInterval(function(){
+      $("#themeMusic")[0].play();
+    }, 50);
+  }
+
+  //Function for passing necessary data to generate the ghosts based on chosen difficulty
   function setDifficulty(htmlString){
     difficulty = htmlString;
     switch (htmlString) {
@@ -184,7 +271,57 @@ $(function(){
     }
   };
 
+  //function called when the game countdown reaches 0
+  function runGame(){
+    paused=false;
+    turnOnMusic();
+    $("#score").html("GO!");
 
+    //start the ghosts off moving
+    changeDir(ghosts[0], "right");
+    changeDir(ghosts[1], "left");
+    changeDir(ghosts[2], "right");
+    changeDir(ghosts[3], "left");
+
+    //Key binding for arrow presses
+    //pause game if space bar pressed
+    //move pacMan in the direction you press
+    $(document).keydown(function(event) {
+      if(!paused){
+        switch (event.key) {
+          case "ArrowUp":
+            event.preventDefault();
+            changeDir(pacMan, "up");
+            break;
+          case "ArrowDown":
+            event.preventDefault();
+            changeDir(pacMan, "down");
+            break;
+          case "ArrowRight":
+            event.preventDefault();
+            changeDir(pacMan, "right");
+            break;
+          case "ArrowLeft":
+            event.preventDefault();
+            changeDir(pacMan, "left");
+            break;
+          default:
+        }
+      }
+      if(event.key == " "){
+        event.preventDefault();
+        $("#pressMusic")[0].play();
+        pause();
+      }
+    });
+  }
+
+  /*********************************************/
+  /*-----------Adding Pieces Functions---------*/
+  /*********************************************/
+
+  //Adds PacMan sprite to the game
+  //Sets the necessary object properties, largely based on his position
   function addPacMan(){
     $(".game-area").empty();
     $(".game-area").append('<img class="background-img" src="img/level1-background.jpg" alt=""> <img src="img/pacman.png" class="pacman-icon"  id="pacman" alt="">');
@@ -197,127 +334,93 @@ $(function(){
     pacMan.speed = 200;
   }
 
-  function startCounter(){
-    var countdownTimer;
-    var countdown = 3;
-    countdownTimer = setInterval(function(){
-      $("#score").html(countdown);
-      if (countdown == 0) {
-        clearInterval(countdownTimer);
-        runGame();
-      }else{
-        $("#score").html(countdown);
+  //function for adding coins to the screen
+  function addCoins(){
+
+    for (var y = 0; y < decisionSquares.length; y++) {
+      var startSquare = decisionSquares[y];
+
+      //loop through each square connected to the current square
+      for (var x = 0; x < startSquare.connectedSquares.length; x++) {
+        var startLeft = startSquare.leftPosition + 12.5;
+        var startTop = startSquare.topPosition + 12.5;
+
+        //Adds coins between two horizontal squares
+        if(startSquare.topPosition == decisionSquares[startSquare.connectedSquares[x]].topPosition){
+          var endLeft = decisionSquares[startSquare.connectedSquares[x]].leftPosition + 12.5;
+          if(endLeft > startLeft){
+            for (var i = startLeft; i <= endLeft; i+=10) {
+              $(".game-area").append('<img src="img/coin.png" class="coin-icon" style="left:' + i + 'px; top: ' + startTop + 'px">');
+            }
+          }
+        }
+        //Adds coins between two vertical squares
+        if (startSquare.leftPosition == decisionSquares[startSquare.connectedSquares[x]].leftPosition) {
+          var endTop = decisionSquares[startSquare.connectedSquares[x]].topPosition + 12.5;
+          if (startTop > endTop) {
+            for (var i = startTop; i >= endTop; i-=10) {
+              $(".game-area").append('<img src="img/coin.png" class="coin-icon" style="left:' + startLeft + 'px; top: ' + i + 'px">');
+            }
+          }
+        }
       }
-      countdown-=1;
-    }, 500);
-  }
-
-
-  function gameEnd(outcome){
-    var addedToLeaderboard = false;
-    pause();
-    $(document).unbind("keyup");
-    $(".current-score-display").empty();
-    if(outcome == "win"){
-      $("#winMusic")[0].play();
-      $(".current-score-display").append('<h3>You Won! Your score was: <span id="score"></span></h3>');
-    }else{
-      $("#deathMusic")[0].play();
-      $(".current-score-display").append('<h3>You Lose! Your score was: <span id="score"></span></h3>');
     }
-    $("#score").html(score);
-
-    $(".current-score-display").append('<button type="button" id="toLeaderboardButton">Add to Leaderboard</button>');
-
-    $("#toLeaderboardButton").click(function(){
-      $("#pressMusic")[0].play();
-      $(".current-score-display").empty();
-      $(".current-score-display").append('<input id="playerName" type="text" placeholder="Name"> <button type="button" id="addToBoard">Add to Leaderboard</button>');
-
-      $("#addToBoard").click(function(){
-        $("#pressMusic")[0].play();
-        addedToLeaderboard = updateBoard();
-        if(addedToLeaderboard){
-          setupGame();
-        }
-      });
-    });
   }
 
-  /**********************************************/
-  /*--Func for setting event listeners on game--*/
-  /**********************************************/
-
-  function turnOnMusic(){
-    musicTimer = setInterval(function(){
-      $("#themeMusic")[0].play();
-    }, 50);
+  //Adds the ghosts, has arguments for the image, and for their speed
+  function addGhosts(img, speed){
+    var html;
+    for (var i = 0; i < 4; i++) {
+      if(img == "ghost"){
+        html = '<img src="img/ghost' + i + '.png" class="ghosts" id="ghost' + i + '" alt="">';
+      }else{
+        html = '<img src="img/trump.png" class="ghosts" id="ghost' + i + '" alt="">';
+      }
+      $(".game-area").append(html);
+    }
+    setGhostPositions(speed);
   }
 
-  function runGame(){
-    paused=false;
-    turnOnMusic();
-    spawnFruit();
-    $("#score").html("GO!");
-    changeDir(ghosts[0], "right");
-    changeDir(ghosts[1], "left");
-    changeDir(ghosts[2], "right");
-    changeDir(ghosts[3], "left");
-
-    //Event Listener that stop default action of spacebar being pressed
-    $(document).keydown(function(event) {
-      if(event.key == " " || event.key == "ArrowUp" || event.key == "ArrowDown" || event.key == "ArrowRight" || event.key == "ArrowLeft"){
-        event.preventDefault();
-      }
-    })
-
-    //Event Listener for keyboard presses
-    $(document).keyup(function(event) {
-      if(!paused){
-        switch (event.key) {
-          case "ArrowUp":
-            changeDir(pacMan, "up");
-            break;
-          case "ArrowDown":
-            changeDir(pacMan, "down");
-            break;
-          case "ArrowRight":
-            changeDir(pacMan, "right");
-            break;
-          case "ArrowLeft":
-            changeDir(pacMan, "left");
-            break;
-          default:
-        }
-      }
-      if(event.key == " "){
-        $("#pressMusic")[0].play();
-        pause();
-      }
-    });
+  //Set the ghost objects which store their state
+  function setGhostPositions(speed){
+    ghosts.length = 0;
+    for (var i = 0; i < 4; i++) {
+      var currentGhost = {};
+      currentGhost.left = $("#ghost" + i).position().left;
+      currentGhost.right = $("#ghost" + i).position().left + $("#ghost" + 1).width();
+      currentGhost.top = $("#ghost" + i).position().top;
+      currentGhost.bottom = $("#ghost" + i).position().top + $("#ghost" + 1).height();
+      currentGhost.moving = false;
+      currentGhost.id = "#ghost" + i;
+      currentGhost.speed = speed;
+      ghosts.push(currentGhost)
+    }
   }
 
-  /*******************************************************/
-  /*-------------Funcs for moving PacMan-----------------*/
-  /*******************************************************/
+  /*********************************************/
+  /*-----------Moving Pieces Functions---------*/
+  /*********************************************/
 
-  //function for calling movePac on a timer until another direction key is pressed
+  //function for moving pacman/ghosts on timer
   function changeDir(objType, direction){
+    //if the object isnt moving create a timer and move it on the timer interval
     if(!objType.moving){
       objType.timer = setInterval(function(){
         moveObj(objType, direction);
       }, objType.speed);
       objType.moving=true;
     }else{
+      //if hes already moving, stop its current timer, and recursively call itself
       clearInterval(objType.timer);
       objType.moving = false;
       changeDir(objType, direction);
     }
   }
 
-  //Function for moving pacman in each of the four directions
+  //Function for moving pacman or a ghost in a given directions
   function moveObj(objType, direction){
 
+    //two if statements for when they move between the edges of the screen
     if(objType.left== 565 && objType.top == 245 && objType.previousDir == "right"){
       objType.left = 5;
       objType.right = objType.left += 30;
@@ -327,21 +430,27 @@ $(function(){
       objType.right = objType.left += 30;
       $(objType.id).css('left', objType.left + 'px');
     }else{
+      //return the directions that they move in from their current position
       var squareOptions = checkOptions(objType);
 
+      //returns a random direction that a ghost may move in
       var tempArr = [];
       if(objType.id != "#pacman"){
+        //returns all possible directions for movement
         $.each(squareOptions, function( key, value ) {
-           if(value == true){
-             tempArr.push(key);
-           }
+            if(value == true){
+              tempArr.push(key);
+            }
         });
+        //removes the option for it to move in the opposite direction to its current direction
         tempArr = tempArr.filter(function(elem){
           return elem != objType.oppDir;
         });
+        //randomly select a suitable direction
         direction = tempArr[Math.floor(Math.random() * tempArr.length)];
       }
 
+      //if statements relating to choosing to move in each of the four directions
       if(direction == "right" && squareOptions.right == true){
         objType.left+=jumpDist;
         objType.right+=jumpDist;
@@ -371,11 +480,16 @@ $(function(){
         objType.previousDir = "up";
         objType.oppDir = "down";
       }
-      checkSpace(objType);
+
+      //check the space its moved in to
+      if(objType.id == "#pacman"){
+        checkForObj(objType.left+12.5, objType.top+12.5, '.coin-icon');
+      }
       checkCollisions();
     }
   }
 
+  //rotate pacMan based on his new direction
   function rotatePac(objType, deg){
     if(objType.id == "#pacman"){
       var string = 'rotate(' + deg + 'deg)';
@@ -383,39 +497,22 @@ $(function(){
     }
   }
 
-  function checkCollisions(){
-    for (var i = 0; i < ghosts.length; i++) {
-      if(pacMan.left >= ghosts[i].left && pacMan.left <= ghosts[i].right && pacMan.top == ghosts[i].top ){
-        gameEnd("lose");
-      }
-      if(pacMan.right <= ghosts[i].right && pacMan.right >= ghosts[i].left && pacMan.top == ghosts[i].top ){
-        gameEnd("lose");
-      }
+  /**************************************************/
+  /*----------Funcs for checking spaces-------------*/
+  /**************************************************/
 
-      if(pacMan.top >= ghosts[i].top && pacMan.top <= ghosts[i].bottom && pacMan.left == ghosts[i].left){
-        gameEnd("lose");
-      }
-      if(pacMan.bottom <= ghosts[i].bottom && pacMan.bottom >= ghosts[i].top && pacMan.left == ghosts[i].left){
-        gameEnd("lose");
-      }
-    }
-  }
-
-  function checkSpace(objType){
-    if(objType.id == "#pacman"){
-      checkForCoin(objType.left+12.5, objType.top+12.5);
-    }
-  }
-
+  //Finds the possible spaces you may move to based on the current position
   function checkOptions(objType){
     var previousOpt = {};
 
+    //if you are at a decision square just return the corresponding object, as it contains booleans for all the directions it may move in
     for (var i = 0; i < decisionSquares.length; i++) {
       if (decisionSquares[i].leftPosition == objType.left && decisionSquares[i].topPosition == objType.top) {
         return decisionSquares[i];
       }
     }
 
+    //if not on a decision square, return that it may only move forward or backwards
     if(objType.previousDir == "right" || objType.previousDir == "left"){
       previousOpt.left = true;
       previousOpt.right = true;
@@ -426,111 +523,79 @@ $(function(){
     return previousOpt;
   }
 
-  /**************************************************/
-  /*----------Funcs for manipulating coins----------*/
-  /**************************************************/
-
-  //function for adding coins to the screen
-  function addCoins(){
-
-    for (var y = 0; y < decisionSquares.length; y++) {
-      var startSquare = decisionSquares[y];
-      //loop through each square connected to the current square
-      for (var x = 0; x < startSquare.connectedSquares.length; x++) {
-        var startLeft = startSquare.leftPosition + 12.5;
-        var startTop = startSquare.topPosition + 12.5;
-
-        //if the current square is horizontal to its connected square
-        if(startSquare.topPosition == decisionSquares[startSquare.connectedSquares[x]].topPosition){
-
-          var endLeft = decisionSquares[startSquare.connectedSquares[x]].leftPosition + 12.5;
-          if(endLeft > startLeft){
-            for (var i = startLeft; i <= endLeft; i+=10) {
-              $(".game-area").append('<img src="img/coin.png" class="coin-icon" style="left:' + i + 'px; top: ' + startTop + 'px">');
-            }
-          }
-          else{
-            for (var i = startLeft; i >= endLeft; i-=10) {
-              $(".game-area").append('<img src="img/coin.png" class="coin-icon" style="left:' + i + 'px; top: ' + startTop + 'px">');
-            }
-          }
-        }
-        //if the current square is vertical from its connected square
-        if (startSquare.leftPosition == decisionSquares[startSquare.connectedSquares[x]].leftPosition) {
-
-          var endTop = decisionSquares[startSquare.connectedSquares[x]].topPosition + 12.5;
-          if (startTop > endTop) {
-            for (var i = startTop; i >= endTop; i-=10) {
-              $(".game-area").append('<img src="img/coin.png" class="coin-icon" style="left:' + startLeft + 'px; top: ' + i + 'px">');
-            }
-          }
-          else{
-            for (var i = startTop; i <= endTop; i+=10) {
-              $(".game-area").append('<img src="img/coin.png" class="coin-icon" style="left:' + startLeft + 'px; top: ' + i + 'px">');
-            }
-          }
-        }
-      }
-    }
-  }
-
-  function removeCoin(pacLeft, pacTop){
-    $(document).find(".coin-icon").filter(function() {
-      return this.style['left'] == pacLeft && this.style['top'] == pacTop;
-    }).remove();
-    updateScore();
-  }
-
-  function checkForCoin(pacLeft, pacTop){
-    var coins = $('.coin-icon').filter(function() {
-        return this.style['top'] == (pacTop + "px") && this.style['left'] == (pacLeft + "px");
+  //checks for coins at the current position, only works for coins, but could be used for other powerups
+  //if it finds any it calls for them to be roemoved
+  function checkForObj(objLeft, objTop, type){
+    var objects = $(type).filter(function() {
+        return this.style['top'] == (objTop + "px") && this.style['left'] == (objLeft + "px");
     });
-    if(coins.length > 0){
-      removeCoin(pacLeft + "px", pacTop + "px");
+    if(objects.length > 0){
+      removeObj(objLeft + "px", objTop + "px", type);
     }
   }
 
-  /*************************************/
-  /*----Funcs for updating GUI---------*/
-  /*************************************/
+  //remove all objects at the given location, then increment the score
+  function removeObj(objLeft, objTop, type){
+    $(document).find(type).filter(function() {
+      return this.style['left'] == objLeft && this.style['top'] == objTop;
+    }).remove();
+    updateScore(type);
+  }
 
-  function updateScore(){
-    if(difficulty == "Easy" || difficulty == "Trump Mode"){
-      score+=10;
-      if(score==6820){
-        gameEnd("win");
+  //check for collisions between pacmMan and ghosts
+  function checkCollisions(){
+    for (var i = 0; i < ghosts.length; i++) {
+      if(pacMan.left >= ghosts[i].left && pacMan.left <= ghosts[i].right && pacMan.top == ghosts[i].top ){
+        gameEnd("lose");
+      }else if(pacMan.right <= ghosts[i].right && pacMan.right >= ghosts[i].left && pacMan.top == ghosts[i].top ){
+        gameEnd("lose");
+      }else if(pacMan.top >= ghosts[i].top && pacMan.top <= ghosts[i].bottom && pacMan.left == ghosts[i].left){
+        gameEnd("lose");
+      }else if(pacMan.bottom <= ghosts[i].bottom && pacMan.bottom >= ghosts[i].top && pacMan.left == ghosts[i].left){
+        gameEnd("lose");
       }
+    }
+  }
+
+  /**************************************************/
+  /*----------Funcs for stopping game---------------*/
+  /**************************************************/
+
+
+  //End the current game
+  //Provides the UI components for finishing the game and adding the final score to the leaderboard
+  function gameEnd(outcome){
+    var addedToLeaderboard = false;
+    pause();
+    $(document).unbind("keyup");
+
+    $(".current-score-display").empty();
+    if(outcome == "win"){
+      $("#winMusic")[0].play();
+      $(".current-score-display").append('<h3>You Won! Your score was: <span id="score"></span></h3>');
     }else{
-      score+=20;
-      if(score==13640){
-        gameEnd("win");
-      }
+      $("#deathMusic")[0].play();
+      $(".current-score-display").append('<h3>You Lose! Your score was: <span id="score"></span></h3>');
     }
-    $("#score").html("Current score: " + score);
-    $("#eatMusic")[0].play();
+    $("#score").html(score);
+    $(".current-score-display").append('<button type="button" id="toLeaderboardButton">Add to Leaderboard</button>');
+
+    $("#toLeaderboardButton").click(function(){
+      $("#pressMusic")[0].play();
+      $(".current-score-display").empty();
+      $(".current-score-display").append('<input id="playerName" type="text" placeholder="Name"> <button type="button" id="addToBoard">Add to Leaderboard</button>');
+
+      $("#addToBoard").click(function(){
+        $("#pressMusic")[0].play();
+        addedToLeaderboard = updateBoard();
+        if(addedToLeaderboard){
+          setupGame();
+        }
+      });
+    });
   }
 
-  function updateBoard(){
-    if($("#playerName").val()){
-      leaderboardScores.push({
-        name: $("#playerName").val(),
-        gameScore: score
-      });
-      $(".leaderboard").empty();
-
-      leaderboardScores.sort(function(obj1, obj2) {
-        return obj1.gameScore - obj2.gameScore;
-      });
-
-      for (var i = 0; i < leaderboardScores.length && i <=4;  i++) {
-        addRow(i, leaderboardScores[i]);
-      }
-      return true;
-    }else{
-      return false;
-    }
-  }
-
+  //pauses the current game, stops all game objects and music
   function pause(){
     if(!paused){
       clearInterval(musicTimer);
@@ -553,54 +618,5 @@ $(function(){
       }
     }
   }
-
-  /**********************************************/
-  /*-----------Ghosts Setup Funcs---------------*/
-  /**********************************************/
-
-  function addGhosts(img, speed){
-    var html;
-    for (var i = 0; i < 4; i++) {
-      if(img == "ghost"){
-        html = '<img src="img/ghost' + i + '.png" class="ghosts" id="ghost' + i + '" alt="">';
-      }else{
-        html = '<img src="img/trump.png" class="ghosts" id="ghost' + i + '" alt="">';
-      }
-
-      $(".game-area").append(html);
-    }
-    setGhostPositions(speed);
-  }
-
-  function setGhostPositions(speed){
-    ghosts.length = 0;
-    for (var i = 0; i < 4; i++) {
-      var currentGhost = {};
-      currentGhost.left = $("#ghost" + i).position().left;
-      currentGhost.right = $("#ghost" + i).position().left + $("#ghost" + 1).width();
-      currentGhost.top = $("#ghost" + i).position().top;
-      currentGhost.bottom = $("#ghost" + i).position().top + $("#ghost" + 1).height();
-      currentGhost.moving = false;
-      currentGhost.id = "#ghost" + i;
-      currentGhost.speed = speed;
-      ghosts.push(currentGhost)
-    }
-  }
-
-  function spawnFruit(){
-    var counter = 0;
-    var fruitTimer = setInterval(function(){
-      if(counter % 10 == 0){
-        $("#fruit").remove();
-        var random = Math.floor(Math.random() * 63);
-        console.log(decisionSquares[random]);
-        var html = '<img src="img/pacman.png" class="fruit"  id="fruit" style="left:' + decisionSquares[random].leftPosition + 'px; top: ' + decisionSquares[random].topPosition +'px">';
-        $(".game-area").append(html);
-
-      }
-      counter++;
-    }, 500);
-  }
-
 
 });
