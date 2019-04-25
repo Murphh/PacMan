@@ -12,8 +12,11 @@
   </head>
   <body>
     <div class="header-bar">
-      <h1>Browser Based PacMan</h1>
-      <h3>Week 4 Submission</h3>
+      <img src="img/pacman.png" class="header-img">
+      <img src="img/ghost1.png" class="header-img">
+      <h1>PacMan</h1>
+      <img src="img/ghost1.png" class="header-img">
+      <img src="img/pacman.png" class="header-img">
     </div>
 
     <div class="game-display">
@@ -41,7 +44,17 @@
         </div>
 
         <div id="instructionsOption">
-          <h1>Instructions!</h1>
+          <h1>Instructions</h1>
+          <h2>Welcome to browser based PacMan!</h2>
+          <h2>The more coins you eat, the higher your score</h2>
+          <h2>If the ghosts touch you, it's GAME OVER</h2>
+          <h2>If you want to take a break, press the SPACE BAR to pause</h2>
+          <h2>UP ARROW to move PacMan up</h2>
+          <h2>DOWN ARROW to move PacMan down</h2>
+          <h2>RIGHT ARROW to move PacMan right</h2>
+          <h2>LEFT ARROW to move PacMan left</h2>
+          <h2>View the leaderboard to see how your friends did!</h2>
+          <h3>Good Luck!</h3>
         </div>
       </div>
     </div>
@@ -56,6 +69,10 @@
 
     <audio id="pressMusic">
       <source src="music/button-press.mp3"></source>
+    </audio>
+
+    <audio id="winMusic">
+      <source src="music/pacman-win.wav"></source>
     </audio>
   </body>
 </html>

@@ -190,6 +190,7 @@ $(function(){
     $(document).unbind("keyup");
     $(".current-score-display").empty();
     if(outcome == "win"){
+      $("#winMusic")[0].play();
       $(".current-score-display").append('<h3>You Won! Your score was: <span id="score"></span></h3>');
     }else{
       $("#deathMusic")[0].play();
