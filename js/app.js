@@ -86,6 +86,27 @@ $(function(){
   //Starts the Game!
   setupGame();
 
+  $("#filterScores").click(function(){
+    $("#filterVal").val("");
+    $(".leaderboard").empty();
+    var numOfEntries = 0;
+    for (var i = 0; i < leaderboardScores.length; i++) {
+      if(leaderboardScores[i].name == $("#filterVal").val()){
+        addRow(numOfEntries, leaderboardScores[i]);
+      }
+    }
+  });
+
+  function addRow(rowNum, entry){
+    var rowId = "row" + rowNum;
+    var currentName = "<p>" + entry.name + "</p>"
+    var currentScore = "<p>" + entry.gameScore + "</p>";
+    $(".leaderboard").prepend('<div class="leaderboard-row" id="' + rowId + '"></div>');
+    rowId = "#" + rowId;
+    $(rowId).append(currentName);
+    $(rowId).append(currentScore);
+  }
+
   /*********************************************/
   /*----Funcs for starting/ending Game---------*/
   /*********************************************/
@@ -433,20 +454,13 @@ $(function(){
       });
 
       for (var i = 0; i < leaderboardScores.length && i <=4;  i++) {
-        var rowId = "row" + i;
-        var currentName = "<p>" + leaderboardScores[i].name + "</p>"
-        var currentScore = "<p>" + leaderboardScores[i].gameScore + "</p>";
-        $(".leaderboard").prepend('<div class="leaderboard-row" id="' + rowId + '"></div>');
-        rowId = "#" + rowId;
-        $(rowId).append(currentName);
-        $(rowId).append(currentScore);
+        addRow(i, leaderboardScores[i]);
       }
       return true;
     }else{
       return false;
     }
   }
-
 
   function pause(){
     if(!paused){

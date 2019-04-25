@@ -136,10 +136,11 @@ body {
   height: 20px;
   margin: 20px auto;
 }
-.current-score-display button:hover {
+.current-score-display button:hover, #filterScores:hover {
   background-color: darkblue;
   cursor: pointer;
 }
+
 .current-score-display input[type="text"], .leaderboard-filter input[type="text"]{
   box-sizing: border-box;
   height: 40px;
