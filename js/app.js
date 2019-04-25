@@ -185,7 +185,7 @@ $(function(){
   }
 
   function runGame(){
-
+    paused=false;
     turnOnMusic();
     $("#score").html("GO!");
     changeDir(ghosts[0], "right");
