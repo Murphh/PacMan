@@ -17,25 +17,45 @@
     </div>
 
     <div class="game-display">
+      <audio id="themeMusic">
+        <source src="music/theme.wav">
+      </audio>
       <div class="current-game">
         <div class="current-score-display">
         </div>
         <div class="game-area">
         </div>
       </div>
-      <div class="leaderboard-display">
-        <h1 class="leaderboard-title">Top Scores</h1>
-        <form class="leaderboard-filter" action="index.html" method="post">
-          <input type="text" name="" id="filterVal" value="" placeholder="Search by name">
-          <button type="button" id="filterScores">Search</button>
-        </form>
-        <div class="leaderboard">
+      <div class="options-display">
+        <div class="display-choice">
+          <button type="button" class="options-button active-button" id="instructionsButton" name="button">Instructions</button>
+          <button type="button" class="options-button" id ="leaderboardButton"name="button">Leaderboard</button>
+        </div>
+        <div id ="leaderboardOption">
+          <form class="leaderboard-filter" action="index.html" method="post">
+            <input type="text" name="" id="filterVal" value="" placeholder="Search by name">
+            <button type="button" id="filterScores">Search</button>
+          </form>
+          <div class="leaderboard">
+          </div>
+        </div>
+
+        <div id="instructionsOption">
+          <h1>Instructions!</h1>
         </div>
       </div>
     </div>
 
-    <audio>
-      <source src="music/theme.wav"></source>
+    <audio id="eatMusic">
+      <source src="music/eat-coin.wav"></source>
+    </audio>
+
+    <audio id="deathMusic">
+      <source src="music/pacman-death.wav"></source>
+    </audio>
+
+    <audio id="pressMusic">
+      <source src="music/button-press.mp3"></source>
     </audio>
   </body>
 </html>

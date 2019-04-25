@@ -30,14 +30,14 @@ body {
   width: 100%;
 }
 
-.current-game, .leaderboard-display {
+.current-game, .options-display {
   height: 100%;
   min-width: 718px;
   max-width: 718px;
   margin: 0 auto;
 }
 
-.current-game, .leaderboard-display {
+.current-game, .options-display {
   display: flex;
   flex-direction: column;
 }
@@ -48,7 +48,7 @@ body {
   flex-wrap: wrap;
 }
 
-.leaderboard-display {
+.options-display {
   justify-content: flex-start;
   flex-wrap: nowrap;
 }
@@ -64,6 +64,7 @@ body {
   text-align: center;
   align-self: center;
   justify-content: flex-start;
+  margin: 0 auto;
 }
 
 .leaderboard-row {
@@ -86,17 +87,21 @@ body {
   margin: 10px auto;
 }
 
-.current-score-display, .leaderboard-title, .leaderboard-filter {
+.current-score-display, .display-choice, .leaderboard-filter {
   width: 80%;
   padding: 10px 0 10px;
   align-self: center;
   color: yellow;
   text-align: center;
 }
-.leaderboard-title {
-  margin-left: 10%;
-  margin-right: 10%;
+.leaderboard-filter {
+  margin: 0 auto;
 }
+
+.display-choice {
+  margin: 20px 10% 0;
+}
+
 .current-score-display{
   display: flex;
   justify-content: space-around;
@@ -108,7 +113,7 @@ body {
   height: 60px;
 }
 
-.current-score-display button, .leaderboard-filter button {
+.current-score-display button, .leaderboard-filter button, .options-button{
   height: 40px;
   width: 150px;
   background-color: dodgerblue;
@@ -117,6 +122,23 @@ body {
   border-radius: 5px;
   font-weight: bold;
   font-size: 1.1em;
+}
+
+.options-button {
+  margin-right: 10px;
+}
+
+.active-button {
+  background-color: darkblue;
+}
+
+#leaderboardOption {
+  display: none;
+}
+
+#instructionsOption {
+  display: block;
+  color: white;
 }
 
 #toLeaderboardButton{
@@ -136,7 +158,8 @@ body {
   height: 20px;
   margin: 20px auto;
 }
-.current-score-display button:hover, #filterScores:hover {
+
+.current-score-display button:hover, #filterScores:hover, .options-button:hover {
   background-color: darkblue;
   cursor: pointer;
 }

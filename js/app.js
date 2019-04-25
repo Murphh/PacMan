@@ -87,6 +87,7 @@ $(function(){
   setupGame();
 
   $("#filterScores").click(function(){
+    $("#pressMusic")[0].play();
     $("#filterVal").val("");
     $(".leaderboard").empty();
     var numOfEntries = 0;
@@ -95,6 +96,22 @@ $(function(){
         addRow(numOfEntries, leaderboardScores[i]);
       }
     }
+  });
+
+  $("#instructionsButton").click(function(){
+    $("#pressMusic")[0].play();
+    $("#leaderboardOption").css("display", "none");
+    $("#instructionsOption").css("display", "block");
+    $("#leaderboardButton").removeClass("active-button");
+    $(this).addClass("active-button");
+  });
+
+  $("#leaderboardButton").click(function(){
+      $("#pressMusic")[0].play();
+      $("#instructionsOption").css("display", "none");
+      $("#leaderboardOption").css("display", "block");
+      $("#instructionsButton").removeClass("active-button");
+      $(this).addClass("active-button");
   });
 
   function addRow(rowNum, entry){
@@ -133,6 +150,7 @@ $(function(){
     addCoins();
 
     $("#startGame").click(function(){
+      $("#pressMusic")[0].play();
       $(".current-score-display").append('<h1 id="score"></h1>');
       $("#startGame").remove();
       startCounter();
@@ -174,19 +192,22 @@ $(function(){
     if(outcome == "win"){
       $(".current-score-display").append('<h3>You Won! Your score was: <span id="score"></span></h3>');
     }else{
+      $("#deathMusic")[0].play();
       $(".current-score-display").append('<h3>You Lose! Your score was: <span id="score"></span></h3>');
-      $("#score").html(score);
     }
+    $("#score").html(score);
 
     $(".current-score-display").append('<button type="button" id="toLeaderboardButton">Add to Leaderboard</button>');
 
     $("#toLeaderboardButton").click(function(){
+      $("#pressMusic")[0].play();
       $(".current-score-display h3").remove();
       $("#toLeaderboardButton").remove();
       $(".current-score-display").append('<input id="playerName" type="text" placeholder="Name">');
       $(".current-score-display").append('<button type="button" id="addToBoard">Add to Leaderboard</button>');
 
       $("#addToBoard").click(function(){
+        $("#pressMusic")[0].play();
         addedToLeaderboard = updateBoard();
         if(addedToLeaderboard){
           setupGame();
@@ -201,7 +222,7 @@ $(function(){
 
   function turnOnMusic(){
     musicTimer = setInterval(function(){
-      $("audio")[0].play();
+      $("#themeMusic")[0].play();
     }, 50);
   }
 
@@ -241,6 +262,7 @@ $(function(){
         }
       }
       if(event.key == " "){
+        $("#pressMusic")[0].play();
         pause();
       }
     });
@@ -435,8 +457,9 @@ $(function(){
   function updateScore(){
     score+=10;
     $("#score").html("Current score: " + score);
-    if(score==5680){
-      gameEnd("won");
+    $("#eatMusic")[0].play();
+    if(score==250){
+      gameEnd("win");
     }
   }
 
