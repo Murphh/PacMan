@@ -2,7 +2,6 @@ $(function(){
   /**********************************************************/
   /*---------Hard Coded Data for decison squares -----------*/
   /**********************************************************/
-  var decisionSquares = [];
   var data = [[15, 15, false, true, true, false, [1, 6]],
   [125, 15, false, true, true, true, [0, 2, 7]],
   [245, 15, false, false, true, true, [1, 9]],
@@ -72,6 +71,7 @@ $(function(){
   /*----Initial Var Setup & Running of Game-------*/
   /************************************************/
 
+  var decisionSquares = [];
   var leaderboardScores = [];
   var ghosts = [];
   var pacMan = {};
@@ -99,20 +99,20 @@ $(function(){
   });
 
   $("#instructionsButton").click(function(){
-    $("#pressMusic")[0].play();
-    $("#leaderboardOption").css("display", "none");
-    $("#instructionsOption").css("display", "block");
-    $("#leaderboardButton").removeClass("active-button");
-    $(this).addClass("active-button");
+    optionsChange("#leaderboardOption", "#instructionsOption", "#leaderboardButton", "#instructionsButton");
   });
 
   $("#leaderboardButton").click(function(){
-      $("#pressMusic")[0].play();
-      $("#instructionsOption").css("display", "none");
-      $("#leaderboardOption").css("display", "block");
-      $("#instructionsButton").removeClass("active-button");
-      $(this).addClass("active-button");
+      optionsChange("#instructionsOption", "#leaderboardOption", "#instructionsButton", "#leaderboardButton");
   });
+
+  function optionsChange(offVar, onVar, offButton, onButton){
+    $("#pressMusic")[0].play();
+    $(offVar).css("display", "none");
+    $(onVar).css("display", "block")
+    $(offButton).removeClass("active-button");
+    $(onButton).addClass("active-button");
+  }
 
   function addRow(rowNum, entry){
     var rowId = "row" + rowNum;
@@ -203,10 +203,8 @@ $(function(){
 
     $("#toLeaderboardButton").click(function(){
       $("#pressMusic")[0].play();
-      $(".current-score-display h3").remove();
-      $("#toLeaderboardButton").remove();
-      $(".current-score-display").append('<input id="playerName" type="text" placeholder="Name">');
-      $(".current-score-display").append('<button type="button" id="addToBoard">Add to Leaderboard</button>');
+      $(".current-score-display").empty();
+      $(".current-score-display").append('<input id="playerName" type="text" placeholder="Name"> <button type="button" id="addToBoard">Add to Leaderboard</button>');
 
       $("#addToBoard").click(function(){
         $("#pressMusic")[0].play();
@@ -228,9 +226,25 @@ $(function(){
     }, 50);
   }
 
+  function spawnFruit(){
+    var counter = 0;
+    var fruitTimer = setInterval(function(){
+      if(counter % 10 == 0){
+        console.log("5 Seconds!");
+        var random = Math.floor(Math.random() * 63);
+        console.log(decisionSquares[random]);
+        var html = '<img src="img/pacman.png" class="fruit"  id="fruit" style="left:' + decisionSquares[random].leftPosition + 'px; top: ' + decisionSquares[random].topPosition +'px">';
+        $(".game-area").append(html);
+
+      }
+      counter++;
+    }, 500);
+  }
+
   function runGame(){
     paused=false;
     turnOnMusic();
+    spawnFruit();
     $("#score").html("GO!");
     changeDir(ghosts[0], "right");
     changeDir(ghosts[1], "left");
@@ -295,14 +309,10 @@ $(function(){
       objType.left = 5;
       objType.right = objType.left += 30;
       $(objType.id).css('left', objType.left + 'px');
-      $(objType.id).css('transform', 'rotate(0deg)');
-      objType.previousDir = "right";
     }else if (objType.left <= -20 && objType.top == 245 && objType.previousDir == "left") {
       objType.left = 565;
       objType.right = objType.left += 30;
       $(objType.id).css('left', objType.left + 'px');
-      $(objType.id).css('transform', 'rotate(0deg)');
-      objType.previousDir = "left";
     }else{
       var squareOptions = checkOptions(objType);
 
@@ -323,28 +333,28 @@ $(function(){
         objType.left+=jumpDist;
         objType.right+=jumpDist;
         $(objType.id).css('left', objType.left + 'px');
-        $(objType.id).css('transform', 'rotate(0deg)');
+        rotatePac(objType, 0);
         objType.previousDir = "right";
         objType.oppDir = "left";
       }else if (direction == "left" && squareOptions.left == true){
         objType.left-=jumpDist;
         objType.right-=jumpDist;
         $(objType.id).css('left', objType.left + 'px');
-        $(objType.id).css('transform', 'rotate(180deg)');
+        rotatePac(objType, 180);
         objType.previousDir = "left";
         objType.oppDir = "right";
       }else if (direction == "down" && squareOptions.down == true){
         objType.top+=jumpDist;
         objType.bottom+=jumpDist;
         $(objType.id).css('top', objType.top + 'px');
-        $(objType.id).css('transform', 'rotate(90deg)');
+        rotatePac(objType, 90);
         objType.previousDir = "down";
         objType.oppDir = "up";
       }else if (direction == "up" && squareOptions.up == true){
         objType.top-=jumpDist;
         objType.bottom-=jumpDist;
         $(objType.id).css('top', objType.top + 'px');
-        $(objType.id).css('transform', 'rotate(270deg)');
+        rotatePac(objType, 270);
         objType.previousDir = "up";
         objType.oppDir = "down";
       }
@@ -353,19 +363,34 @@ $(function(){
     }
   }
 
-  function checkCollisions(){
-    var directions = ["left", "right", "top", "bottom"];
+  function rotatePac(objType, deg){
+    if(objType.id == "#pacman"){
+      var string = 'rotate(' + deg + 'deg)';
+      $(objType.id).css('transform', string);
+    }
+  }
 
+  function checkCollisions(){
     for (var i = 0; i < ghosts.length; i++) {
       if(pacMan.left >= ghosts[i].left && pacMan.left <= ghosts[i].right && pacMan.top >= ghosts[i].top && pacMan.top <= ghosts[i].bottom){
         gameEnd("lose");
       }
+      if(pacMan.right <= ghosts[i].right && pacMan.right >= ghosts[i].left && pacMan.top >= ghosts[i].top && pacMan.top <= ghosts[i].bottom){
+        gameEnd("lose");
+      }
+      // if(pacMan.top >= ghosts[i].top && pacMan.top <= ghosts[i].bottom && pacMan.left >= ghosts[i].left && pacMan.left <= ghosts[i].right){
+      //   gameEnd("lose");
+      // }
+      // if(pacMan.bottom <= ghosts[i].bottom && pacMan.bottom >= ghosts[i].top && pacMan.top >= ghosts[i].top && pacMan.top <= ghosts[i].bottom){
+      //   gameEnd("lose");
+      // }
+
     }
   }
 
   function checkSpace(objType){
     if(objType.id == "#pacman"){
-      checkForCoin(objType.left+12.5, objType.top+12.5)
+      checkForCoin(objType.left+12.5, objType.top+12.5);
     }
   }
 
@@ -467,13 +492,12 @@ $(function(){
 
   function updateBoard(){
     if($("#playerName").val()){
-      var name = $("#playerName").val();
-      var obj = {
-        name: name,
+      leaderboardScores.push({
+        name: $("#playerName").val(),
         gameScore: score
-      }
-      leaderboardScores.push(obj);
+      });
       $(".leaderboard").empty();
+
       leaderboardScores.sort(function(obj1, obj2) {
         return obj1.gameScore - obj2.gameScore;
       });

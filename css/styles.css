@@ -237,6 +237,13 @@ body {
   z-index: 11;
 }
 
+.fruit {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  z-index: 9;
+}
+
 #ghost0{
   top: 15px;
   left: 15px;
