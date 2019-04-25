@@ -3,582 +3,70 @@ $(function(){
   /*---------Hard Coded Data for decison squares -----------*/
   /**********************************************************/
   var decisionSquares = [];
-  decisionSquares[0] = {
-    leftPosition: 15,
-    topPosition: 15,
-    up: false,
-    right: true,
-    down: true,
-    left: false,
-    connectedSquares: [1, 6]
-  };
-  decisionSquares[1] = {
-    leftPosition: 125,
-    topPosition: 15,
-    up: false,
-    right: true,
-    down: true,
-    left: true,
-    connectedSquares: [0, 2, 7]
-  }
-  decisionSquares[2] = {
-    leftPosition: 245,
-    topPosition: 15,
-    up: false,
-    right: false,
-    down: true,
-    left: true,
-    connectedSquares: [1, 9]
-  }
-  decisionSquares[3] = {
-    leftPosition: 305,
-    topPosition: 15,
-    up: false,
-    right: true,
-    down: true,
-    left: false,
-    connectedSquares: [4, 10]
-  }
-  decisionSquares[4] = {
-    leftPosition: 425,
-    topPosition: 15,
-    up: false,
-    right: true,
-    down: true,
-    left: true,
-    connectedSquares: [3, 5, 12]
-  }
-  decisionSquares[5] = {
-    leftPosition: 525,
-    topPosition: 15,
-    up: false,
-    right: false,
-    down: true,
-    left: true,
-    connectedSquares: [4, 13]
-  }
-  decisionSquares[6] = {
-    leftPosition: 15,
-    topPosition: 85,
-    up: true,
-    right: true,
-    down: true,
-    left: false,
-    connectedSquares: [0, 7, 14]
-  }
-  decisionSquares[7] = {
-    leftPosition: 125,
-    topPosition: 85,
-    up: true,
-    right: true,
-    down: true,
-    left: true,
-    connectedSquares: [1, 6, 8, 15]
-  }
-  decisionSquares[8] = {
-    leftPosition: 185,
-    topPosition: 85,
-    up: false,
-    right: true,
-    down: true,
-    left: true,
-    connectedSquares: [7, 9, 16]
-  }
-  decisionSquares[9] = {
-    leftPosition: 245,
-    topPosition: 85,
-    up: true,
-    right: true,
-    down: false,
-    left: true,
-    connectedSquares: [2, 8, 10]
-  }
-  decisionSquares[10] = {
-    leftPosition: 305,
-    topPosition: 85,
-    up: true,
-    right: true,
-    down: false,
-    left: true,
-    connectedSquares: [3, 9, 11]
-  }
-  decisionSquares[11] = {
-    leftPosition: 365,
-    topPosition: 85,
-    up: false,
-    right: true,
-    down: true,
-    left: true,
-    connectedSquares: [10, 12, 19]
-  }
-  decisionSquares[12] = {
-    leftPosition: 425,
-    topPosition: 85,
-    up: true,
-    right: true,
-    down: true,
-    left: true,
-    connectedSquares: [4, 11, 13]
-  }
-  decisionSquares[13] = {
-    leftPosition: 525,
-    topPosition: 85,
-    up: true,
-    right: false,
-    down: true,
-    left: true,
-    connectedSquares: [5, 12]
-  }
-  decisionSquares[14] = {
-    leftPosition: 15,
-    topPosition: 135,
-    up: true,
-    right: true,
-    down: false,
-    left: false,
-    connectedSquares: [6, 15]
-  }
-  decisionSquares[15] = {
-    leftPosition: 125,
-    topPosition: 135,
-    up: true,
-    right: false,
-    down: true,
-    left: true,
-    connectedSquares: [7, 14, 26]
-  }
-  decisionSquares[16] = {
-    leftPosition: 185,
-    topPosition: 135,
-    up: true,
-    right: true,
-    down: false,
-    left: false,
-    connectedSquares: [8, 17]
-  }
-  decisionSquares[17] = {
-    leftPosition: 245,
-    topPosition: 135,
-    up: false,
-    right: false,
-    down: true,
-    left: true,
-    connectedSquares: [16, 23]
-  }
-  decisionSquares[18] = {
-    leftPosition: 305,
-    topPosition: 135,
-    up: false,
-    right: true,
-    down: true,
-    left: false,
-    connectedSquares: [19, 24]
-  }
-  decisionSquares[19] = {
-    leftPosition: 365,
-    topPosition: 135,
-    up: true,
-    right: false,
-    down: false,
-    left: true,
-    connectedSquares: [11, 18]
-  }
-  decisionSquares[20] = {
-    leftPosition: 425,
-    topPosition: 135,
-    up: true,
-    right: true,
-    down: true,
-    left: false,
-    connectedSquares: [12, 21, 29]
-  }
-  decisionSquares[21] = {
-    leftPosition: 525,
-    topPosition: 135,
-    up: true,
-    right: false,
-    down: false,
-    left: true,
-    connectedSquares: [13, 20]
-  }
-  decisionSquares[22] = {
-    leftPosition: 185,
-    topPosition: 185,
-    up: false,
-    right: true,
-    down: true,
-    left: false,
-    connectedSquares: [23, 27]
-  }
-  decisionSquares[23] = {
-    leftPosition: 245,
-    topPosition: 185,
-    up: true,
-    right: true,
-    down: false,
-    left: true,
-    connectedSquares: [17, 22, 24]
-  }
-  decisionSquares[24] = {
-    leftPosition: 305,
-    topPosition: 185,
-    up: true,
-    right: true,
-    down: false,
-    left: true,
-    connectedSquares: [18, 23, 25]
-  }
-  decisionSquares[25] = {
-    leftPosition: 365,
-    topPosition: 185,
-    up: false,
-    right: false,
-    down: true,
-    left: true,
-    connectedSquares: [24, 28]
-  }
-  decisionSquares[26] = {
-    leftPosition: 125,
-    topPosition: 245,
-    up: true,
-    right: true,
-    down: true,
-    left: true,
-    connectedSquares: [15, 27, 33]
-  }
-  decisionSquares[27] = {
-    leftPosition: 185,
-    topPosition: 245,
-    up: true,
-    right: false,
-    down: true,
-    left: true,
-    connectedSquares: [22, 26, 30]
-  }
-  decisionSquares[28] = {
-    leftPosition: 365,
-    topPosition: 245,
-    up: true,
-    right: true,
-    down: true,
-    left: false,
-    connectedSquares: [25, 29, 31]
-  }
-  decisionSquares[29] = {
-    leftPosition: 425,
-    topPosition: 245,
-    up: true,
-    right: true,
-    down: true,
-    left: true,
-    connectedSquares: [20, 28, 38]
-  }
-  decisionSquares[30] = {
-    leftPosition: 185,
-    topPosition: 295,
-    up: true,
-    right: true,
-    down: true,
-    left: false,
-    connectedSquares: [27, 31, 34]
-  }
-  decisionSquares[31] = {
-    leftPosition: 365,
-    topPosition: 295,
-    up: true,
-    right: false,
-    down: true,
-    left: true,
-    connectedSquares: [28, 30, 37]
-  }
-  decisionSquares[32] = {
-    leftPosition: 15,
-    topPosition: 345,
-    up: false,
-    right: true,
-    down: true,
-    left: false,
-    connectedSquares: [33, 40]
-  }
-  decisionSquares[33] = {
-    leftPosition: 125,
-    topPosition: 345,
-    up: true,
-    right: true,
-    down: true,
-    left: true,
-    connectedSquares: [26, 32, 34, 42]
-  }
-  decisionSquares[34] = {
-    leftPosition: 185,
-    topPosition: 345,
-    up: true,
-    right: true,
-    down: false,
-    left: true,
-    connectedSquares: [30, 33, 35]
-  }
-  decisionSquares[35] = {
-    leftPosition: 245,
-    topPosition: 345,
-    up: false,
-    right: false,
-    down: true,
-    left: true,
-    connectedSquares: [34, 44]
-  }
-  decisionSquares[36] = {
-    leftPosition: 305,
-    topPosition: 345,
-    up: false,
-    right: true,
-    down: true,
-    left: false,
-    connectedSquares: [37, 45]
-  }
-  decisionSquares[37] = {
-    leftPosition: 365,
-    topPosition: 345,
-    up: true,
-    right: true,
-    down: false,
-    left: true,
-    connectedSquares: [31, 36, 38]
-  }
-  decisionSquares[38] = {
-    leftPosition: 425,
-    topPosition: 345,
-    up: true,
-    right: true,
-    down: true,
-    left: true,
-    connectedSquares: [29, 37, 39, 47]
-  }
-  decisionSquares[39] = {
-    leftPosition: 525,
-    topPosition: 345,
-    up: false,
-    right: false,
-    down: true,
-    left: true,
-    connectedSquares: [38, 49]
-  }
-  decisionSquares[40] = {
-    leftPosition: 15,
-    topPosition: 405,
-    up: true,
-    right: true,
-    down: false,
-    left: false,
-    connectedSquares: [32, 41]
-  }
-  decisionSquares[41] = {
-    leftPosition: 65,
-    topPosition: 405,
-    up: false,
-    right: false,
-    down: true,
-    left: true,
-    connectedSquares: [40, 51]
-  }
-  decisionSquares[42] = {
-    leftPosition: 125,
-    topPosition: 405,
-    up: true,
-    right: true,
-    down: true,
-    left: false,
-    connectedSquares: [33, 43, 52]
-  }
-  decisionSquares[43] = {
-    leftPosition: 185,
-    topPosition: 405,
-    up: false,
-    right: true,
-    down: true,
-    left: true,
-    connectedSquares: [42, 44, 53]
-  }
-  decisionSquares[44] = {
-    leftPosition: 245,
-    topPosition: 405,
-    up: true,
-    right: true,
-    down: false,
-    left: true,
-    connectedSquares: [35, 43, 45]
-  }
-  decisionSquares[45] = {
-    leftPosition: 305,
-    topPosition: 405,
-    up: true,
-    right: true,
-    down: false,
-    left: true,
-    connectedSquares: [36, 44, 46]
-  }
-  decisionSquares[46] = {
-    leftPosition: 365,
-    topPosition: 405,
-    up: false,
-    right: true,
-    down: true,
-    left: true,
-    connectedSquares: [45, 47, 56]
-  }
-  decisionSquares[47] = {
-    leftPosition: 425,
-    topPosition: 405,
-    up: true,
-    right: false,
-    down: true,
-    left: true,
-    connectedSquares: [38, 46, 57]
-  }
-  decisionSquares[48] = {
-    leftPosition: 485,
-    topPosition: 405,
-    up: false,
-    right: true,
-    down: true,
-    left: false,
-    connectedSquares: [49, 58]
-  }
-  decisionSquares[49] = {
-    leftPosition: 525,
-    topPosition: 405,
-    up: true,
-    right: false,
-    down: false,
-    left: true,
-    connectedSquares: [39, 48]
-  }
-  decisionSquares[50] = {
-    leftPosition: 15,
-    topPosition: 455,
-    up: false,
-    right: true,
-    down: true,
-    left: false,
-    connectedSquares: [51, 60]
-  }
-  decisionSquares[51] = {
-    leftPosition: 65,
-    topPosition: 455,
-    up: true,
-    right: true,
-    down: false,
-    left: true,
-    connectedSquares: [41, 50]
-  }
-  decisionSquares[52] = {
-    leftPosition: 125,
-    topPosition: 455,
-    up: true,
-    right: false,
-    down: false,
-    left: true,
-    connectedSquares: [42, 51]
-  }
-  decisionSquares[53] = {
-    leftPosition: 185,
-    topPosition: 455,
-    up: true,
-    right: true,
-    down: false,
-    left: false,
-    connectedSquares: [43, 54]
-  }
-  decisionSquares[54] = {
-    leftPosition: 245,
-    topPosition: 455,
-    up: false,
-    right: false,
-    down: true,
-    left: true,
-    connectedSquares: [53, 61]
-  }
-  decisionSquares[55] = {
-    leftPosition: 305,
-    topPosition: 455,
-    up: false,
-    right: true,
-    down: true,
-    left: false,
-    connectedSquares: [56, 62]
-  }
-  decisionSquares[56] = {
-    leftPosition: 365,
-    topPosition: 455,
-    up: true,
-    right: false,
-    down: false,
-    left: true,
-    connectedSquares: [46, 55]
-  }
-  decisionSquares[57] = {
-    leftPosition: 425,
-    topPosition: 455,
-    up: true,
-    right: true,
-    down: false,
-    left: false,
-    connectedSquares: [47, 58]
-  }
-  decisionSquares[58] = {
-    leftPosition: 485,
-    topPosition: 455,
-    up: true,
-    right: true,
-    down: false,
-    left: true,
-    connectedSquares: [48, 57, 59]
-  }
-  decisionSquares[59] = {
-    leftPosition: 525,
-    topPosition: 455,
-    up: false,
-    right: false,
-    down: true,
-    left: true,
-    connectedSquares: [58, 63]
-  }
-  decisionSquares[60] = {
-    leftPosition: 15,
-    topPosition: 505,
-    up: true,
-    right: true,
-    down: false,
-    left: false,
-    connectedSquares: [50, 61]
-  }
-  decisionSquares[61] = {
-    leftPosition: 245,
-    topPosition: 505,
-    up: true,
-    right: true,
-    down: false,
-    left: true,
-    connectedSquares: [54, 60, 62]
-  }
-  decisionSquares[62] = {
-    leftPosition: 305,
-    topPosition: 505,
-    up: true,
-    right: true,
-    down: false,
-    left: true,
-    connectedSquares: [55, 61, 63]
-  }
-  decisionSquares[63] = {
-    leftPosition: 525,
-    topPosition: 505,
-    up: true,
-    right: false,
-    down: false,
-    left: true,
-    connectedSquares: [59, 62]
-  }
+  var data = [[15, 15, false, true, true, false, [1, 6]],
+  [125, 15, false, true, true, true, [0, 2, 7]],
+  [245, 15, false, false, true, true, [1, 9]],
+  [305, 15, false, true, true, false, [4, 10]],
+  [425, 15, false, true, true, true, [3, 5, 12]],
+  [525, 15, false, false, true, true, [4, 13]],
+  [15, 85, true, true, true, false, [0, 7, 14]],
+  [125, 85, true, true, true, true, [1, 6, 8, 15]],
+  [185, 85, false, true, true, true, [7, 9, 16]],
+  [245, 85, true, true, false, true, [2, 8, 10]],
+  [305, 85, true, true, false, true, [3, 9, 11]], //10
+  [365, 85, false, true, true, true, [10, 12, 19]],
+  [425, 85, true, true, true, true, [4, 11, 13, 20]],
+  [525, 85, true, false, true, true, [5, 12, 21]],
+  [15, 135, true, true, false, false, [6, 15]],
+  [125, 135, true, false, true, true, [7, 14, 26]],
+  [185, 135, true, true, false, false, [8, 17]],
+  [245, 135, false, false, true, true, [6, 23]],
+  [305, 135, false, true, true, false, [19, 24]],
+  [365, 135, true, false, false, true, [11, 18]],
+  [425, 135, true, true, true, false, [12, 21, 29]],
+  [525, 135, true, false, false, true, [13, 20]],
+  [185, 185, false, true, true, false, [23, 27]],
+  [245, 185, true, true, false, true, [17, 22, 24]],
+  [305, 185, true, true, false, true, [18, 23, 25]],
+  [365, 185, false, false, true, true, [24, 28]],
+  [125, 245, true, true, true, true, [15, 27, 33]],
+  [185, 245, true, false, true, true, [22, 26, 30]],
+  [365, 245, true, true, true, false, [25, 29, 31]],
+  [425, 245, true, true, true, true, [20, 28, 38]],
+  [185, 295, true, true, true, false, [27, 31, 34]],
+  [365, 295, true, false, true, true, [28, 30, 37]],
+  [15, 345, false, true, true, false, [33, 40]],
+  [125, 345, true, true, true, true, [26, 32, 34, 42]],
+  [185, 345, true, true, false, true, [30, 33, 35]],
+  [245, 345, false, false, true, true, [34, 44]],
+  [305, 345, false, true, true, false, [37, 45]],
+  [365, 345, true, true, false, true, [31, 36, 38]],
+  [425, 345, true, true, true, true, [29, 37, 39, 47]],
+  [525, 345, false, false, true, true, [38, 49]],
+  [15, 405, true, true, false, false, [32, 41]],
+  [65, 405, false, false, true, true, [40, 51]],
+  [125, 405, true, true, true, false, [33, 43, 52]],
+  [185, 405, false, true, true, true, [42, 44, 53]],
+  [245, 405, true, true, false, true, [35, 43, 45]],
+  [305, 405, true, true, false, true, [36, 44, 46]],
+  [365, 405, false, true, true, true, [45, 47, 56]],
+  [425, 405, true, false, true, true, [38, 46, 57]],
+  [485, 405, false, true, true, false, [49, 58]],
+  [525, 405, true, false, false, true, [39, 48]],
+  [15, 455, false, true, true, false, [51, 60]],
+  [65, 455, true, true, false, true, [41, 50, 52]],
+  [125, 455, true, false, false, true, [42, 51]],
+  [185, 455, true, true, false, false, [43, 54]],
+  [245, 455, false, false, true, true, [53, 61]],
+  [305, 455, false, true, true, false, [56, 62]],
+  [365, 455, true, false, false, true, [46, 55]],
+  [425, 455, true, true, false, false, [47, 58]],
+  [485, 455, true, true, false, true, [48, 57, 59]],
+  [525, 455, false, false, true, true, [58, 63]],
+  [15, 505, true, true, false, false, [50, 61]],
+  [245, 505, true, true, false, true, [54, 60, 62]],
+  [305, 505, true, true, false, true, [55, 61, 63]],
+  [525, 505, true, false, false, true, [59, 62]]];
 
   /************************************************/
   /*----Initial Var Setup & Running of Game-------*/
@@ -590,7 +78,10 @@ $(function(){
   var score = 0;
   var jumpDist = 10;
   var paused = false;
-  var musicTimer;
+
+  for(var i =0; i < data.length; i++){
+    decisionSquares[i] = addSquare(data[i]);
+  }
 
   //Starts the Game!
   setupGame();
@@ -598,6 +89,18 @@ $(function(){
   /*********************************************/
   /*----Funcs for starting/ending Game---------*/
   /*********************************************/
+
+  function addSquare(dataRow){
+    var tempObj = {};
+    tempObj.leftPosition = dataRow[0];
+    tempObj.topPosition = dataRow[1];
+    tempObj.up =  dataRow[2];
+    tempObj.right = dataRow[3];
+    tempObj.down = dataRow[4];
+    tempObj.left = dataRow[5];
+    tempObj.connectedSquares = dataRow[6];
+    return tempObj;
+  }
 
   function setupGame(){
     $(".current-score-display").empty();
@@ -643,9 +146,9 @@ $(function(){
 
 
   function gameEnd(outcome){
+    var addedToLeaderboard = false;
     pause();
     $(document).unbind("keyup");
-    clearInterval(musicTimer);
     $(".current-score-display").empty();
     if(outcome == "win"){
       $(".current-score-display").append('<h3>You Won! Your score was: <span id="score"></span></h3>');
@@ -663,8 +166,10 @@ $(function(){
       $(".current-score-display").append('<button type="button" id="addToBoard">Add to Leaderboard</button>');
 
       $("#addToBoard").click(function(){
-        updateBoard();
-        setupGame();
+        addedToLeaderboard = updateBoard();
+        if(addedToLeaderboard){
+          setupGame();
+        }
       });
     });
   }
@@ -697,24 +202,25 @@ $(function(){
 
     //Event Listener for keyboard presses
     $(document).keyup(function(event) {
-
-      switch (event.key) {
-        case "ArrowUp":
-          changeDir(pacMan, "up");
-          break;
-        case "ArrowDown":
-          changeDir(pacMan, "down");
-          break;
-        case "ArrowRight":
-          changeDir(pacMan, "right");
-          break;
-        case "ArrowLeft":
-          changeDir(pacMan, "left");
-          break;
-        case " ":
-          pause();
-          break;
-        default:
+      if(!paused){
+        switch (event.key) {
+          case "ArrowUp":
+            changeDir(pacMan, "up");
+            break;
+          case "ArrowDown":
+            changeDir(pacMan, "down");
+            break;
+          case "ArrowRight":
+            changeDir(pacMan, "right");
+            break;
+          case "ArrowLeft":
+            changeDir(pacMan, "left");
+            break;
+          default:
+        }
+      }
+      if(event.key == " "){
+        pause();
       }
     });
   }
@@ -914,39 +420,51 @@ $(function(){
   }
 
   function updateBoard(){
-    var name = $("#playerName").val();
-    var obj = {
-      name: name,
-      gameScore: score
-    }
-    leaderboardScores.push(obj);
-    $(".leaderboard").empty();
-    leaderboardScores.sort(function(obj1, obj2) {
-      return obj1.gameScore - obj2.gameScore;
-    });
+    if($("#playerName").val()){
+      var name = $("#playerName").val();
+      var obj = {
+        name: name,
+        gameScore: score
+      }
+      leaderboardScores.push(obj);
+      $(".leaderboard").empty();
+      leaderboardScores.sort(function(obj1, obj2) {
+        return obj1.gameScore - obj2.gameScore;
+      });
 
-    for (var i = 0; i < leaderboardScores.length && i <=4;  i++) {
-      var rowId = "row" + i;
-      var currentName = "<p>" + leaderboardScores[i].name + "</p>"
-      var currentScore = "<p>" + leaderboardScores[i].gameScore + "</p>";
-      $(".leaderboard").prepend('<div class="leaderboard-row" id="' + rowId + '"></div>');
-      rowId = "#" + rowId;
-      $(rowId).append(currentName);
-      $(rowId).append(currentScore);
+      for (var i = 0; i < leaderboardScores.length && i <=4;  i++) {
+        var rowId = "row" + i;
+        var currentName = "<p>" + leaderboardScores[i].name + "</p>"
+        var currentScore = "<p>" + leaderboardScores[i].gameScore + "</p>";
+        $(".leaderboard").prepend('<div class="leaderboard-row" id="' + rowId + '"></div>');
+        rowId = "#" + rowId;
+        $(rowId).append(currentName);
+        $(rowId).append(currentScore);
+      }
+      return true;
+    }else{
+      return false;
     }
   }
 
 
   function pause(){
     if(!paused){
+      clearInterval(musicTimer);
       paused = true;
       clearInterval(pacMan.timer);
+      $(".current-score-display").empty();
+      $(".current-score-display").append('<h1>Game Pauesed</h1>');
       for(var i=0; i < ghosts.length; i++){
         clearInterval(ghosts[i].timer);
       }
     }else {
       paused = false;
+      turnOnMusic();
       changeDir(pacMan, pacMan.previousDir);
+      $(".current-score-display").empty();
+      $(".current-score-display").append('<h1 id="score"></h1>');
+      $("#score").html(score);
       for(var i=0; i < ghosts.length; i++){
         changeDir(ghosts[i], ghosts[i].previousDir);
       }

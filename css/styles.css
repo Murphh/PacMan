@@ -61,7 +61,7 @@ body {
 
 .leaderboard-row {
   display: flex;
-  height: 85px;
+  height: 50px;
   width: 100%;
   background-color: darkblue;
   justify-content: space-around;
@@ -72,9 +72,11 @@ body {
 
 .leaderboard p {
   width: 40%;
+  height: 30px;
   text-align: center;
   font-size: 1.5em;
   font-weight: bold;
+  margin: 10px auto;
 }
 
 .current-score-display, .leaderboard-title {
