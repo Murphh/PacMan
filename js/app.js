@@ -83,7 +83,7 @@ $(function(){
   var jumpDist = 10;
   var paused = false;
   var difficulty;
-  var maxScore = 6820;
+  var maxScore = 5680;
 
   //creates an object from each row of the hard coded data
   for(var i =0; i < data.length; i++){
