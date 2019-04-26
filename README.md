@@ -1,7 +1,7 @@
 # Browser Based PacMan
 
 ## Play The game
-Play it online at the following [link]("https://github.com/Murphh/PacMan").
+Play it online at the following [link]("https://murphh.github.io/PacMan/").
 
 Or clone this GitHub repository and run the **index.html** file.
  
